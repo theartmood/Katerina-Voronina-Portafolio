@@ -1,10 +1,63 @@
-import { BarChart3, FolderOpen, Image, Plus } from 'lucide-react';
+'use client';
+
+import { useEffect, useState } from 'react';
+import { BarChart3, FolderOpen, Image, Plus, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import ProjectList from '@/components/admin/ProjectList';
-import { getProjectStats } from '@/lib/supabase/queries';
+import { createClient } from '@/lib/supabase/client';
 
-export default async function AdminPage() {
-    const stats = await getProjectStats();
+interface Stats {
+    totalProjects: number;
+    totalImages: number;
+    featuredProjects: number;
+    designingProjects: number;
+}
+
+export default function AdminPage() {
+    const [stats, setStats] = useState<Stats>({
+        totalProjects: 0,
+        totalImages: 0,
+        featuredProjects: 0,
+        designingProjects: 0,
+    });
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        async function fetchStats() {
+            try {
+                const supabase = createClient();
+
+                const [projectsResult, imagesResult] = await Promise.all([
+                    supabase.from('projects').select('id, featured, category'),
+                    supabase.from('project_images').select('id'),
+                ]);
+
+                const projects = projectsResult.data || [];
+                const images = imagesResult.data || [];
+
+                setStats({
+                    totalProjects: projects.length,
+                    totalImages: images.length,
+                    featuredProjects: projects.filter((p: any) => p.featured).length,
+                    designingProjects: projects.filter((p: any) => p.category === 'designing').length,
+                });
+            } catch (error) {
+                console.error('Error fetching stats:', error);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        fetchStats();
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-[#050505] text-white flex items-center justify-center">
+                <Loader2 className="w-12 h-12 animate-spin text-purple-500" />
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-[#050505] text-white pt-24">
