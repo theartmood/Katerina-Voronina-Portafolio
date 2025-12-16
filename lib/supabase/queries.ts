@@ -1,8 +1,4 @@
 import { createClient } from './client';
-import { createClient as createServerClient } from './server';
-
-// Flag para determinar si estamos en el cliente o servidor
-const isServer = typeof window === 'undefined';
 
 export interface Project {
     id: string;
@@ -52,6 +48,7 @@ export interface ProjectWithImages extends Project {
  * Get all published projects with their images (Server-side)
  */
 export async function getAllProjects(): Promise<ProjectWithImages[]> {
+    const { createClient: createServerClient } = await import('./server');
     const supabase = await createServerClient();
 
     const { data: projects, error: projectsError } = await supabase
@@ -77,6 +74,7 @@ export async function getAllProjects(): Promise<ProjectWithImages[]> {
  * Get a single project by slug with its images (Server-side)
  */
 export async function getProjectBySlug(slug: string): Promise<ProjectWithImages | null> {
+    const { createClient: createServerClient } = await import('./server');
     const supabase = await createServerClient();
 
     const { data, error } = await supabase
@@ -129,6 +127,7 @@ export async function getProjectById(id: string): Promise<ProjectWithImages | nu
  * Get featured projects (Server-side)
  */
 export async function getFeaturedProjects(): Promise<ProjectWithImages[]> {
+    const { createClient: createServerClient } = await import('./server');
     const supabase = await createServerClient();
 
     const { data: projects, error } = await supabase
@@ -157,6 +156,7 @@ export async function getFeaturedProjects(): Promise<ProjectWithImages[]> {
 export async function getProjectsByCategory(
     category: 'designing' | 'drawings' | 'all'
 ): Promise<ProjectWithImages[]> {
+    const { createClient: createServerClient } = await import('./server');
     const supabase = await createServerClient();
 
     const { data: projects, error } = await supabase
@@ -291,6 +291,7 @@ export async function updateProjectImage(
  * Get project statistics (Server-side)
  */
 export async function getProjectStats() {
+    const { createClient: createServerClient } = await import('./server');
     const supabase = await createServerClient();
 
     const [
