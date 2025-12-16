@@ -9,22 +9,42 @@ import { ProjectGrid } from '@/components/projects/ProjectGrid';
 import { SPRING_TRANSITION } from '@/lib/data/projects';
 import { useFeaturedProjects, useProjectsByCategory } from '@/lib/supabase/hooks';
 import type { ProjectWithImages } from '@/lib/supabase/queries';
+import { ContactCallToAction } from '@/components/ui/ContactCallToAction';
+import { useLanguage } from '@/lib/i18n/LanguageContext';
 
 function SectionHeader({ title, number }: { title: string; number: string }) {
     return (
         <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 1.2, ease: [0.33, 1, 0.68, 1] }}
             className="flex items-baseline gap-4 mb-24 md:mb-32 border-b border-white/10 pb-6"
         >
-            <span className="font-sans text-xs md:text-sm text-white/30 tracking-widest">({number})</span>
-            <h2 className="font-serif text-4xl md:text-5xl text-platinum italic">{title}</h2>
+            <motion.span 
+                className="font-sans text-xs md:text-sm text-white/30 tracking-widest"
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1, delay: 0.2, ease: [0.33, 1, 0.68, 1] }}
+            >
+                ({number})
+            </motion.span>
+            <motion.h2 
+                className="font-serif text-4xl md:text-5xl text-platinum italic"
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1, delay: 0.3, ease: [0.33, 1, 0.68, 1] }}
+            >
+                {title}
+            </motion.h2>
         </motion.div>
     );
 }
 
 export default function HomePage() {
+    const { t } = useLanguage();
     const containerRef = useRef(null);
     const { scrollYProgress } = useScroll({
         target: containerRef,
@@ -76,7 +96,7 @@ export default function HomePage() {
                         transition={{ duration: 1, delay: 0.2, ease: 'easeOut' }}
                         className="font-sans text-sm md:text-base tracking-[0.3em] uppercase text-indigo-200/60 mb-8"
                     >
-                        Digital Artisan
+                        {t.heroSubtitle}
                     </motion.p>
                     <motion.h1
                         initial={{ opacity: 0, y: 40 }}
@@ -84,8 +104,8 @@ export default function HomePage() {
                         transition={{ duration: 1.2, delay: 0.4, ...SPRING_TRANSITION }}
                         className="font-serif text-5xl md:text-7xl lg:text-8xl leading-[1.1] md:leading-[1.1] text-platinum"
                     >
-                        Crafting digital <br />
-                        <span className="italic text-white/70">silence</span> & substance.
+                        {t.heroTitle1} <br />
+                        <span className="italic text-white/70">{t.heroTitle2}</span> {t.heroTitle3}
                     </motion.h1>
                     <motion.div
                         initial={{ width: 0 }}
@@ -97,45 +117,78 @@ export default function HomePage() {
 
                 {/* Section 1: Designing Human Interfaces */}
                 <section id="interfaces" className="mb-40 md:mb-60">
-                    <SectionHeader number="01" title="Designing Human Interfaces" />
+                    <SectionHeader number="01" title={t.section1Title} />
                     <ProjectGrid projects={featuredInterfaces} variant="interface" />
 
                     {/* See Projects Button */}
-                    <div className="flex justify-center mt-20">
-                        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <motion.div 
+                        className="flex justify-center mt-20"
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
+                    >
+                        <motion.div 
+                            whileHover={{ scale: 1.02 }} 
+                            whileTap={{ scale: 0.98 }}
+                            transition={{ duration: 0.4, ease: [0.33, 1, 0.68, 1] }}
+                        >
                             <Link
                                 href="/designing"
-                                className="inline-flex items-center gap-3 px-8 py-3 border border-white/20 rounded-full hover:bg-white/5 hover:border-white/40 transition-all duration-300"
+                                className="inline-flex items-center gap-3 px-8 py-3 border border-white/20 rounded-full hover:bg-white/5 hover:border-white/40 transition-all duration-500"
                             >
                                 <span className="font-sans text-xs tracking-[0.2em] uppercase text-white/70">
-                                    See Projects
+                                    {t.seeProjects}
                                 </span>
-                                <ArrowRight size={14} className="text-white/70" />
+                                <motion.div
+                                    whileHover={{ x: 4 }}
+                                    transition={{ duration: 0.4, ease: [0.33, 1, 0.68, 1] }}
+                                >
+                                    <ArrowRight size={14} className="text-white/70" />
+                                </motion.div>
                             </Link>
                         </motion.div>
-                    </div>
+                    </motion.div>
                 </section>
 
                 {/* Section 2: Drawings */}
                 <section id="drawings" className="mb-40 md:mb-60">
-                    <SectionHeader number="02" title="Drawings" />
+                    <SectionHeader number="02" title={t.section2Title} />
                     <ProjectGrid projects={featuredDrawings} variant="drawing" />
 
                     {/* See Projects Button */}
-                    <div className="flex justify-center mt-20">
-                        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <motion.div 
+                        className="flex justify-center mt-20"
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
+                    >
+                        <motion.div 
+                            whileHover={{ scale: 1.02 }} 
+                            whileTap={{ scale: 0.98 }}
+                            transition={{ duration: 0.4, ease: [0.33, 1, 0.68, 1] }}
+                        >
                             <Link
                                 href="/drawings"
-                                className="inline-flex items-center gap-3 px-8 py-3 border border-white/20 rounded-full hover:bg-white/5 hover:border-white/40 transition-all duration-300"
+                                className="inline-flex items-center gap-3 px-8 py-3 border border-white/20 rounded-full hover:bg-white/5 hover:border-white/40 transition-all duration-500"
                             >
                                 <span className="font-sans text-xs tracking-[0.2em] uppercase text-white/70">
-                                    See Projects
+                                    {t.seeProjects}
                                 </span>
-                                <ArrowRight size={14} className="text-white/70" />
+                                <motion.div
+                                    whileHover={{ x: 4 }}
+                                    transition={{ duration: 0.4, ease: [0.33, 1, 0.68, 1] }}
+                                >
+                                    <ArrowRight size={14} className="text-white/70" />
+                                </motion.div>
                             </Link>
                         </motion.div>
-                    </div>
+                    </motion.div>
                 </section>
+
+                {/* Elegant Contact Section */}
+                <ContactCallToAction />
             </Container>
         </div>
     );

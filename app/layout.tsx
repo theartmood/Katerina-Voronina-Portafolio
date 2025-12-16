@@ -1,10 +1,8 @@
 import type { Metadata } from 'next';
 import { Playfair_Display, Inter } from 'next/font/google';
 import './globals.css';
-import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
 import { AuroraBackground } from '@/components/layout/AuroraBackground';
-import { MobileMenu } from '@/components/layout/MobileMenu';
+import { ClientLayout } from '@/components/layout/ClientLayout';
 
 const playfair = Playfair_Display({
     subsets: ['latin'],
@@ -52,10 +50,7 @@ export default function RootLayout({
         <html lang="en" className={`${playfair.variable} ${inter.variable}`}>
             <body className="relative min-h-screen text-platinum selection:bg-amethyst-dark selection:text-white">
                 <AuroraBackground />
-                <Header />
-                <MobileMenu />
-                <main className="relative">{children}</main>
-                <Footer />
+                <ClientLayout>{children}</ClientLayout>
             </body>
         </html>
     );

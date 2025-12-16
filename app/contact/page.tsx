@@ -9,25 +9,60 @@ import { PremiumButton } from '@/components/ui/PremiumButton';
 import { SPRING_TRANSITION } from '@/lib/data/projects';
 
 export default function ContactPage() {
-    const [formState, setFormState] = useState<'idle' | 'submitting' | 'success'>('idle');
+    const [formState, setFormState] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
     const [formData, setFormData] = useState({
         name: '',
         email: '',
         subject: '',
         message: '',
     });
+    const [errorMessage, setErrorMessage] = useState('');
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setFormState('submitting');
-        // Simulate network request
-        setTimeout(() => {
+        setErrorMessage('');
+
+        try {
+            // Send to SheetDB
+            const response = await fetch('https://sheetdb.io/api/v1/ezqlumxug5dnn', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    data: [{
+                        name: formData.name,
+                        email: formData.email,
+                        subject: formData.subject,
+                        message: formData.message,
+                        date: new Date().toISOString()
+                    }]
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to send message');
+            }
+
             setFormState('success');
+            
+            // Reset form after success
             setTimeout(() => {
                 setFormState('idle');
                 setFormData({ name: '', email: '', subject: '', message: '' });
             }, 3000);
-        }, 1500);
+        } catch (error) {
+            console.error('Error sending message:', error);
+            setFormState('error');
+            setErrorMessage('Failed to send message. Please try again or contact directly via email.');
+            
+            // Reset error state after 5 seconds
+            setTimeout(() => {
+                setFormState('idle');
+            }, 5000);
+        }
     };
 
     return (
@@ -110,6 +145,17 @@ export default function ContactPage() {
                                     onChange={(value) => setFormData({ ...formData, message: value })}
                                 />
 
+                                {/* Error Message */}
+                                {formState === 'error' && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: -10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        className="p-4 bg-red-500/10 border border-red-500/30 rounded-lg"
+                                    >
+                                        <p className="text-red-400 text-sm text-center">{errorMessage}</p>
+                                    </motion.div>
+                                )}
+
                                 {/* Submit Button */}
                                 <motion.div
                                     initial={{ opacity: 0 }}
@@ -117,7 +163,7 @@ export default function ContactPage() {
                                     transition={{ delay: 0.6 }}
                                     className="pt-4 flex justify-center"
                                 >
-                                    <PremiumButton type="submit" disabled={formState !== 'idle'}>
+                                    <PremiumButton type="submit" disabled={formState === 'submitting'}>
                                         {formState === 'submitting' ? (
                                             <>
                                                 <motion.div
@@ -129,10 +175,7 @@ export default function ContactPage() {
                                                 Sending...
                                             </>
                                         ) : (
-                                            <>
-                                                Send Message
-                                                <Send size={16} />
-                                            </>
+                                            'Send Message'
                                         )}
                                     </PremiumButton>
                                 </motion.div>
