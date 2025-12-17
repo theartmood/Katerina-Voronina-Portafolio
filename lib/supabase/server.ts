@@ -1,28 +1,24 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr';
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 
+/**
+ * Create a Supabase client for server-side operations
+ * For public data queries (projects, images), we use a simple client without cookies
+ * This avoids errors in dynamic pages where cookies() can fail in Next.js 15
+ */
 export async function createClient() {
-    const { cookies } = await import('next/headers');
-    const cookieStore = await cookies();
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+        throw new Error('Supabase environment variables not configured');
+    }
 
-    return createServerClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    // Para queries públicas (lectura de proyectos e imágenes), no necesitamos cookies
+    // Usar cliente simple que funciona en todos los contextos de Next.js 15
+    return createSupabaseClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
         {
-            cookies: {
-                getAll() {
-                    return cookieStore.getAll();
-                },
-                setAll(cookiesToSet: { name: string; value: string; options: CookieOptions }[]) {
-                    try {
-                        cookiesToSet.forEach(({ name, value, options }) =>
-                            cookieStore.set(name, value, options)
-                        );
-                    } catch {
-                        // The `setAll` method was called from a Server Component.
-                        // This can be ignored if you have middleware refreshing
-                        // user sessions.
-                    }
-                },
+            auth: {
+                persistSession: false,
+                autoRefreshToken: false,
             },
         }
     );
