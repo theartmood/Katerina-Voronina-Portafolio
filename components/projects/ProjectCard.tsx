@@ -46,8 +46,8 @@ function DrawingCard({ project, index }: { project: ProjectWithImages; index: nu
                 >
                     <motion.div
                         className="w-full h-full"
-                        whileHover={{ scale: 1.05 }}
-                        transition={{ duration: 0.8, ease: [0.33, 1, 0.68, 1] }}
+                        whileHover={{ scale: 1.08 }}
+                        transition={{ duration: 0.6, ease: [0.33, 1, 0.68, 1] }}
                     >
                         <OptimizedImage
                             src={coverImage.public_url}
@@ -55,12 +55,9 @@ function DrawingCard({ project, index }: { project: ProjectWithImages; index: nu
                             width={coverImage.width || 1200}
                             height={coverImage.height || 1600}
                             blur={coverImage.blur_data_url}
-                            className="w-full h-full object-cover opacity-80 group-hover:opacity-100 grayscale-[20%] group-hover:grayscale-0 transition-all duration-700 ease-out"
+                            className="w-full h-full object-cover"
                         />
                     </motion.div>
-
-                    {/* Overlay revealed on hover */}
-                    <motion.div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 </div>
 
                 <div className="mt-6 flex justify-between items-baseline px-1">
@@ -100,10 +97,9 @@ function InterfaceCard({ project, index }: { project: ProjectWithImages; index: 
             <div className="w-full md:w-3/5 relative group cursor-pointer">
                 <Link href={`/projects/${project.slug}`}>
                     <div className="overflow-hidden relative rounded-sm">
-                        <div className="absolute inset-0 bg-indigo-500/10 mix-blend-overlay z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                         <motion.div
-                            whileHover={{ scale: 1.02 }}
-                            transition={HOVER_TRANSITION}
+                            whileHover={{ scale: 1.05 }}
+                            transition={{ duration: 0.6, ease: [0.33, 1, 0.68, 1] }}
                         >
                             <OptimizedImage
                                 src={coverImage.public_url}
@@ -111,7 +107,7 @@ function InterfaceCard({ project, index }: { project: ProjectWithImages; index: 
                                 width={coverImage.width || 1600}
                                 height={coverImage.height || 1200}
                                 blur={coverImage.blur_data_url}
-                                className="w-full h-auto object-cover grayscale-[50%] group-hover:grayscale-0 transition-all duration-700"
+                                className="w-full h-auto object-cover"
                             />
                         </motion.div>
                     </div>
