@@ -48,53 +48,101 @@ export interface ProjectWithImages extends Project {
  * Get all published projects with their images (Server-side)
  */
 export async function getAllProjects(): Promise<ProjectWithImages[]> {
-    const { createClient: createServerClient } = await import('./server');
-    const supabase = await createServerClient();
+    try {
+        // Validar variables de entorno
+        if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+            console.error('Supabase environment variables not configured');
+            return [];
+        }
 
-    const { data: projects, error: projectsError } = await supabase
-        .from('projects')
-        .select(`
-            *,
-            images:project_images!project_images_project_id_fkey(*)
-        `)
-        .eq('published', true)
-        .order('order_index');
+        const { createClient: createServerClient } = await import('./server');
+        const supabase = await createServerClient();
 
-    if (projectsError) throw projectsError;
+        const { data: projects, error: projectsError } = await supabase
+            .from('projects')
+            .select(`
+                *,
+                images:project_images!project_images_project_id_fkey(*)
+            `)
+            .eq('published', true)
+            .order('order_index');
 
-    return (projects || []).map(p => ({
-        ...p,
-        images: (p.images || []).sort((a: ProjectImage, b: ProjectImage) => 
-            a.order_index - b.order_index
-        )
-    }));
+        if (projectsError) {
+            console.error('Error fetching projects:', projectsError);
+            throw projectsError;
+        }
+
+        return (projects || []).map(p => {
+            // Validar y filtrar imágenes con URLs válidas
+            const validImages = (p.images || []).filter((img: ProjectImage) => 
+                img && 
+                img.public_url && 
+                typeof img.public_url === 'string' &&
+                (img.public_url.startsWith('http') || img.public_url.startsWith('/'))
+            );
+
+            return {
+                ...p,
+                images: validImages.sort((a: ProjectImage, b: ProjectImage) => 
+                    a.order_index - b.order_index
+                )
+            };
+        });
+    } catch (error) {
+        console.error('Error in getAllProjects:', error);
+        return [];
+    }
 }
 
 /**
  * Get a single project by slug with its images (Server-side)
  */
 export async function getProjectBySlug(slug: string): Promise<ProjectWithImages | null> {
-    const { createClient: createServerClient } = await import('./server');
-    const supabase = await createServerClient();
+    try {
+        // Validar variables de entorno
+        if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+            console.error('Supabase environment variables not configured');
+            throw new Error('Supabase not configured');
+        }
 
-    const { data, error } = await supabase
-        .from('projects')
-        .select(`
-            *,
-            images:project_images!project_images_project_id_fkey(*)
-        `)
-        .eq('slug', slug)
-        .single();
+        const { createClient: createServerClient } = await import('./server');
+        const supabase = await createServerClient();
 
-    if (error) {
-        if (error.code === 'PGRST116') return null; // Not found
+        const { data, error } = await supabase
+            .from('projects')
+            .select(`
+                *,
+                images:project_images!project_images_project_id_fkey(*)
+            `)
+            .eq('slug', slug)
+            .single();
+
+        if (error) {
+            if (error.code === 'PGRST116') return null; // Not found
+            console.error('Supabase query error:', error);
+            throw error;
+        }
+
+        if (!data) {
+            return null;
+        }
+
+        // Validar y filtrar imágenes con URLs válidas
+        const validImages = (data.images || []).filter((img: ProjectImage) => 
+            img && 
+            img.public_url && 
+            typeof img.public_url === 'string' &&
+            (img.public_url.startsWith('http') || img.public_url.startsWith('/'))
+        );
+
+        return {
+            ...data,
+            images: validImages
+        };
+    } catch (error) {
+        console.error('Error in getProjectBySlug:', error);
         throw error;
     }
-
-    return {
-        ...data,
-        images: data.images || []
-    };
 }
 
 /**
@@ -156,27 +204,51 @@ export async function getFeaturedProjects(): Promise<ProjectWithImages[]> {
 export async function getProjectsByCategory(
     category: 'designing' | 'drawings' | 'all'
 ): Promise<ProjectWithImages[]> {
-    const { createClient: createServerClient } = await import('./server');
-    const supabase = await createServerClient();
+    try {
+        // Validar variables de entorno
+        if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+            console.error('Supabase environment variables not configured');
+            return [];
+        }
 
-    const { data: projects, error } = await supabase
-        .from('projects')
-        .select(`
-            *,
-            images:project_images!project_images_project_id_fkey(*)
-        `)
-        .eq('category', category)
-        .eq('published', true)
-        .order('order_index');
+        const { createClient: createServerClient } = await import('./server');
+        const supabase = await createServerClient();
 
-    if (error) throw error;
+        const { data: projects, error } = await supabase
+            .from('projects')
+            .select(`
+                *,
+                images:project_images!project_images_project_id_fkey(*)
+            `)
+            .eq('category', category)
+            .eq('published', true)
+            .order('order_index');
 
-    return (projects || []).map(p => ({
-        ...p,
-        images: (p.images || []).sort((a: ProjectImage, b: ProjectImage) => 
-            a.order_index - b.order_index
-        )
-    }));
+        if (error) {
+            console.error('Error fetching projects by category:', error);
+            throw error;
+        }
+
+        return (projects || []).map(p => {
+            // Validar y filtrar imágenes con URLs válidas
+            const validImages = (p.images || []).filter((img: ProjectImage) => 
+                img && 
+                img.public_url && 
+                typeof img.public_url === 'string' &&
+                (img.public_url.startsWith('http') || img.public_url.startsWith('/'))
+            );
+
+            return {
+                ...p,
+                images: validImages.sort((a: ProjectImage, b: ProjectImage) => 
+                    a.order_index - b.order_index
+                )
+            };
+        });
+    } catch (error) {
+        console.error('Error in getProjectsByCategory:', error);
+        return [];
+    }
 }
 
 /**

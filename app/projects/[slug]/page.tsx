@@ -20,44 +20,81 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
-    const { slug } = await params;
-    const project = await getProjectBySlug(slug);
+    try {
+        const { slug } = await params;
+        const project = await getProjectBySlug(slug);
 
-    if (!project) {
+        if (!project) {
+            return {
+                title: 'Project Not Found',
+            };
+        }
+
+        const coverImage = project.images.find(img => img.is_cover) || project.images[0];
+
         return {
-            title: 'Project Not Found',
-        };
-    }
-
-    const coverImage = project.images.find(img => img.is_cover) || project.images[0];
-
-    return {
-        title: project.title,
-        description: project.description || `${project.title} - ${project.year}`,
-        openGraph: {
             title: project.title,
             description: project.description || `${project.title} - ${project.year}`,
-            images: coverImage ? [coverImage.public_url] : [],
-        },
-    };
+            openGraph: {
+                title: project.title,
+                description: project.description || `${project.title} - ${project.year}`,
+                images: coverImage ? [coverImage.public_url] : [],
+            },
+        };
+    } catch (error) {
+        console.error('Error generating metadata:', error);
+        return {
+            title: 'Project',
+        };
+    }
 }
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
-    const { slug } = await params;
-    const project = await getProjectBySlug(slug);
+    try {
+        const { slug } = await params;
+        
+        // Validar que las variables de entorno estén configuradas
+        if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+            console.error('Supabase environment variables not configured');
+            return (
+                <Container className="pt-40 md:pt-60 pb-20">
+                    <div className="text-center py-20">
+                        <h1 className="font-serif text-4xl text-platinum mb-4">Configuration Error</h1>
+                        <p className="text-white/60 mb-8">
+                            Supabase is not configured. Please check your environment variables.
+                        </p>
+                        <Link
+                            href="/projects"
+                            className="inline-flex items-center gap-2 text-white/60 hover:text-white transition-colors"
+                        >
+                            <ArrowLeft size={16} />
+                            <span>Back to Projects</span>
+                        </Link>
+                    </div>
+                </Container>
+            );
+        }
 
-    if (!project) {
-        notFound();
-    }
+        const project = await getProjectBySlug(slug);
 
-    // Get all images from the project
-    const galleryImages = project.images.map(img => ({
-        url: img.public_url,
-        alt: img.alt_text || project.title,
-        width: img.width || 1600,
-        height: img.height || 1200,
-        blur: img.blur_data_url,
-    }));
+        if (!project) {
+            notFound();
+        }
+
+        // Validar y filtrar imágenes válidas
+        const validImages = (project.images || []).filter(img => 
+            img.public_url && 
+            (img.public_url.startsWith('http') || img.public_url.startsWith('/'))
+        );
+
+        // Get all images from the project
+        const galleryImages = validImages.map(img => ({
+            url: img.public_url,
+            alt: img.alt_text || project.title,
+            width: img.width || 1600,
+            height: img.height || 1200,
+            blur: img.blur_data_url,
+        }));
 
     return (
         <Container className="pt-40 md:pt-60 pb-20">
@@ -144,4 +181,31 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             )}
         </Container>
     );
+    } catch (error) {
+        console.error('Error loading project:', error);
+        
+        // Si es un error de "not found", usar notFound()
+        if (error && typeof error === 'object' && 'code' in error && error.code === 'PGRST116') {
+            notFound();
+        }
+
+        // Para otros errores, mostrar página de error
+        return (
+            <Container className="pt-40 md:pt-60 pb-20">
+                <div className="text-center py-20">
+                    <h1 className="font-serif text-4xl text-platinum mb-4">Error Loading Project</h1>
+                    <p className="text-white/60 mb-8">
+                        There was an error loading this project. Please try again later.
+                    </p>
+                    <Link
+                        href="/projects"
+                        className="inline-flex items-center gap-2 text-white/60 hover:text-white transition-colors"
+                    >
+                        <ArrowLeft size={16} />
+                        <span>Back to Projects</span>
+                    </Link>
+                </div>
+            </Container>
+        );
+    }
 }
