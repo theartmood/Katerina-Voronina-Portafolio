@@ -275,3 +275,53 @@ export async function extractImageMetadata(file: File): Promise<{
     });
 }
 
+/**
+ * Valida si una URL es válida para usar en imágenes
+ */
+export function isValidImageUrl(url: string | null | undefined): boolean {
+    if (!url || typeof url !== 'string') return false;
+    
+    // URLs absolutas (http/https)
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+        try {
+            new URL(url);
+            return true;
+        } catch {
+            return false;
+        }
+    }
+    
+    // URLs relativas
+    if (url.startsWith('/')) {
+        return true;
+    }
+    
+    // Data URLs (blur placeholders)
+    if (url.startsWith('data:')) {
+        return true;
+    }
+    
+    return false;
+}
+
+/**
+ * Normaliza una URL de Supabase Storage
+ * Asegura que la URL tenga el formato correcto
+ */
+export function normalizeSupabaseUrl(url: string | null | undefined): string | null {
+    if (!url || typeof url !== 'string') return null;
+    
+    // Si ya es una URL válida, retornarla
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+        return url;
+    }
+    
+    // Si es una ruta relativa de Supabase, construir la URL completa
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    if (supabaseUrl && url.startsWith('/')) {
+        return `${supabaseUrl}${url}`;
+    }
+    
+    return null;
+}
+

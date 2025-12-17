@@ -24,39 +24,68 @@ export default function ContactPage() {
         setErrorMessage('');
 
         try {
-            // Send to SheetDB
-            const response = await fetch('https://sheetdb.io/api/v1/ezqlumxug5dnn', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    data: [{
-                        name: formData.name,
-                        email: formData.email,
-                        subject: formData.subject,
-                        message: formData.message,
-                        date: new Date().toISOString()
-                    }]
-                })
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to send message');
-            }
-
-            setFormState('success');
+            // Intentar enviar a SheetDB si está configurado
+            const sheetDbUrl = process.env.NEXT_PUBLIC_SHEETDB_URL || 'https://sheetdb.io/api/v1/ezqlumxug5dnn';
             
-            // Reset form after success
-            setTimeout(() => {
-                setFormState('idle');
-                setFormData({ name: '', email: '', subject: '', message: '' });
-            }, 3000);
+            try {
+                const response = await fetch(sheetDbUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        data: [{
+                            name: formData.name,
+                            email: formData.email,
+                            subject: formData.subject,
+                            message: formData.message,
+                            date: new Date().toISOString()
+                        }]
+                    })
+                });
+
+                if (!response.ok) {
+                    // Si SheetDB falla, intentar método alternativo
+                    throw new Error('SheetDB request failed');
+                }
+
+                // Éxito con SheetDB
+                setFormState('success');
+                
+                // Reset form after success
+                setTimeout(() => {
+                    setFormState('idle');
+                    setFormData({ name: '', email: '', subject: '', message: '' });
+                }, 3000);
+            } catch (sheetDbError) {
+                // Si SheetDB falla, usar mailto como fallback
+                console.warn('SheetDB not available, using mailto fallback:', sheetDbError);
+                
+                // Crear mailto link
+                const subject = encodeURIComponent(formData.subject);
+                const body = encodeURIComponent(
+                    `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
+                );
+                const mailtoLink = `mailto:ekater.voronina@gmail.com?subject=${subject}&body=${body}`;
+                
+                // Abrir cliente de email
+                window.location.href = mailtoLink;
+                
+                // Mostrar mensaje de éxito
+                setFormState('success');
+                setErrorMessage('');
+                
+                // Reset form after success
+                setTimeout(() => {
+                    setFormState('idle');
+                    setFormData({ name: '', email: '', subject: '', message: '' });
+                }, 3000);
+            }
         } catch (error) {
             console.error('Error sending message:', error);
             setFormState('error');
-            setErrorMessage('Failed to send message. Please try again or contact directly via email.');
+            setErrorMessage('Failed to send message. Please contact directly via email: ekater.voronina@gmail.com');
             
             // Reset error state after 5 seconds
             setTimeout(() => {

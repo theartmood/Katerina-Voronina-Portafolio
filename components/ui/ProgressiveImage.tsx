@@ -126,6 +126,10 @@ export function ProgressiveImage({
                         sizes={imageSizes}
                         className="object-cover"
                         onLoad={handleLoad}
+                        onError={(e) => {
+                            console.warn('Error loading image:', src);
+                            // El error se maneja visualmente con el placeholder
+                        }}
                     />
                 </motion.div>
             )}
