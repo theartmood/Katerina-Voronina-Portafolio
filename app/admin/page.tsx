@@ -5,6 +5,7 @@ import { BarChart3, FolderOpen, Image, Plus, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import ProjectList from '@/components/admin/ProjectList';
 import { createClient } from '@/lib/supabase/client';
+import { useLanguage } from '@/lib/i18n/LanguageContext';
 
 interface Stats {
     totalProjects: number;
@@ -14,6 +15,7 @@ interface Stats {
 }
 
 export default function AdminPage() {
+    const { t } = useLanguage();
     const [stats, setStats] = useState<Stats>({
         totalProjects: 0,
         totalImages: 0,
@@ -65,8 +67,8 @@ export default function AdminPage() {
                 {/* Header */}
                 <div className="flex items-center justify-between mb-12">
                     <div>
-                        <h1 className="text-4xl font-serif font-bold mb-2">Panel de Administración</h1>
-                        <p className="text-gray-400">Gestiona tu portafolio</p>
+                        <h1 className="text-4xl font-serif font-bold mb-2">{t.adminTitle}</h1>
+                        <p className="text-gray-400">{t.adminSubtitle}</p>
                     </div>
 
                     <Link
@@ -74,7 +76,7 @@ export default function AdminPage() {
                         className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition-colors flex items-center gap-2"
                     >
                         <Plus className="w-5 h-5" />
-                        Nuevo Proyecto
+                        {t.adminNewProject}
                     </Link>
                 </div>
 
@@ -87,7 +89,7 @@ export default function AdminPage() {
                             </div>
                             <div>
                                 <p className="text-3xl font-bold">{stats.totalProjects}</p>
-                                <p className="text-sm text-gray-400">Proyectos</p>
+                                <p className="text-sm text-gray-400">{t.adminTotalProjects}</p>
                             </div>
                         </div>
                     </div>
@@ -99,7 +101,7 @@ export default function AdminPage() {
                             </div>
                             <div>
                                 <p className="text-3xl font-bold">{stats.totalImages}</p>
-                                <p className="text-sm text-gray-400">Imágenes</p>
+                                <p className="text-sm text-gray-400">{t.adminTotalImages}</p>
                             </div>
                         </div>
                     </div>
@@ -111,7 +113,7 @@ export default function AdminPage() {
                             </div>
                             <div>
                                 <p className="text-3xl font-bold">{stats.featuredProjects}</p>
-                                <p className="text-sm text-gray-400">Destacados</p>
+                                <p className="text-sm text-gray-400">{t.adminFeatured}</p>
                             </div>
                         </div>
                     </div>
@@ -123,7 +125,7 @@ export default function AdminPage() {
                             </div>
                             <div>
                                 <p className="text-3xl font-bold">{stats.designingProjects}</p>
-                                <p className="text-sm text-gray-400">Designing</p>
+                                <p className="text-sm text-gray-400">{t.adminDesigning}</p>
                             </div>
                         </div>
                     </div>
@@ -132,12 +134,12 @@ export default function AdminPage() {
                 {/* Projects List */}
                 <div className="bg-gray-900/50 border border-gray-800 rounded-xl p-6">
                     <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-2xl font-semibold">Proyectos</h2>
+                        <h2 className="text-2xl font-semibold">{t.adminProjects}</h2>
                         <Link
                             href="/"
                             className="text-sm text-gray-400 hover:text-white transition-colors"
                         >
-                            Ver sitio →
+                            {t.adminViewSite}
                         </Link>
                     </div>
 
@@ -145,12 +147,13 @@ export default function AdminPage() {
                 </div>
 
                 {/* Dev Notice */}
-                <div className="mt-8 bg-blue-500/10 border border-blue-500/30 rounded-lg p-4">
-                    <p className="text-sm text-blue-400">
-                        <strong>Modo desarrollo:</strong> Este panel solo está disponible en desarrollo.
-                        Para producción, implementa autenticación adecuada.
-                    </p>
-                </div>
+                {process.env.NODE_ENV === 'development' && (
+                    <div className="mt-8 bg-blue-500/10 border border-blue-500/30 rounded-lg p-4">
+                        <p className="text-sm text-blue-400">
+                            <strong>{t.adminTitle}:</strong> {t.adminDevNotice}
+                        </p>
+                    </div>
+                )}
             </div>
         </div>
     );
