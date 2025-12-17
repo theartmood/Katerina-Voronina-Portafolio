@@ -196,10 +196,10 @@ export default function ContactPage() {
                     >
                         <p className="font-sans text-sm text-white/40 mb-4">Or reach out directly</p>
                         <a
-                            href="mailto:hello@katerinavoronina.com"
+                            href="mailto:ekater.voronina@gmail.com"
                             className="font-serif text-xl text-platinum hover:text-white transition-colors"
                         >
-                            hello@katerinavoronina.com
+                            ekater.voronina@gmail.com
                         </a>
                     </motion.div>
                 </section>

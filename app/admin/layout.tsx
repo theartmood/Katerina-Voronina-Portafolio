@@ -4,7 +4,7 @@ import { AuthProvider, useAuth } from '@/lib/auth/AuthContext';
 import { AdminLogin } from '@/components/admin/AdminLogin';
 import { Loader2, LogOut } from 'lucide-react';
 import Link from 'next/link';
-import { LanguageProvider, useLanguage } from '@/lib/i18n/LanguageContext';
+import { useLanguage } from '@/lib/i18n/LanguageContext';
 import { LanguageSelector } from '@/components/layout/LanguageSelector';
 
 function AdminLayoutContent({ children }: { children: React.ReactNode }) {
@@ -62,11 +62,9 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     return (
-        <LanguageProvider>
-            <AuthProvider>
-                <AdminLayoutContent>{children}</AdminLayoutContent>
-            </AuthProvider>
-        </LanguageProvider>
+        <AuthProvider>
+            <AdminLayoutContent>{children}</AdminLayoutContent>
+        </AuthProvider>
     );
 }
 
