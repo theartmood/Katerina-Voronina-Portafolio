@@ -28,27 +28,36 @@ export default function ContactPage() {
             const sheetDbUrl = process.env.NEXT_PUBLIC_SHEETDB_URL || 'https://sheetdb.io/api/v1/ezqlumxug5dnn';
             
             try {
+                // SheetDB puede aceptar diferentes formatos, intentamos el formato directo primero
+                const payload = {
+                    name: formData.name,
+                    email: formData.email,
+                    subject: formData.subject,
+                    message: formData.message,
+                    date: new Date().toISOString()
+                };
+
                 const response = await fetch(sheetDbUrl, {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({
-                        data: [{
-                            name: formData.name,
-                            email: formData.email,
-                            subject: formData.subject,
-                            message: formData.message,
-                            date: new Date().toISOString()
-                        }]
-                    })
+                    body: JSON.stringify(payload)
                 });
 
+                const responseData = await response.json().catch(() => null);
+                
                 if (!response.ok) {
-                    // Si SheetDB falla, intentar método alternativo
-                    throw new Error('SheetDB request failed');
+                    console.error('SheetDB error response:', {
+                        status: response.status,
+                        statusText: response.statusText,
+                        data: responseData
+                    });
+                    throw new Error(`SheetDB request failed: ${response.status} ${response.statusText}`);
                 }
+
+                console.log('SheetDB success:', responseData);
 
                 // Éxito con SheetDB
                 setFormState('success');

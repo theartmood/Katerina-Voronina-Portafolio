@@ -108,27 +108,37 @@ export async function getProjectBySlug(slug: string): Promise<ProjectWithImages 
         const { createClient: createServerClient } = await import('./server');
         const supabase = await createServerClient();
 
-        const { data, error } = await supabase
+        // Primero obtener el proyecto
+        const { data: project, error: projectError } = await supabase
             .from('projects')
-            .select(`
-                *,
-                images:project_images!project_images_project_id_fkey(*)
-            `)
+            .select('*')
             .eq('slug', slug)
             .single();
 
-        if (error) {
-            if (error.code === 'PGRST116') return null; // Not found
-            console.error('Supabase query error:', error);
-            throw error;
+        if (projectError) {
+            if (projectError.code === 'PGRST116') return null; // Not found
+            console.error('Supabase query error (project):', projectError);
+            throw projectError;
         }
 
-        if (!data) {
+        if (!project) {
             return null;
         }
 
+        // Luego obtener las imágenes del proyecto
+        const { data: images, error: imagesError } = await supabase
+            .from('project_images')
+            .select('*')
+            .eq('project_id', project.id)
+            .order('order_index', { ascending: true });
+
+        if (imagesError) {
+            console.error('Supabase query error (images):', imagesError);
+            // No lanzar error, solo retornar proyecto sin imágenes
+        }
+
         // Validar y filtrar imágenes con URLs válidas
-        const validImages = (data.images || []).filter((img: ProjectImage) => 
+        const validImages = (images || []).filter((img: ProjectImage) => 
             img && 
             img.public_url && 
             typeof img.public_url === 'string' &&
@@ -136,7 +146,7 @@ export async function getProjectBySlug(slug: string): Promise<ProjectWithImages 
         );
 
         return {
-            ...data,
+            ...project,
             images: validImages
         };
     } catch (error) {
