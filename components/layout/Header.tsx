@@ -35,12 +35,12 @@ export function Header() {
             initial={{ y: -100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ ...SPRING_TRANSITION, delay: 0.5 }}
-            className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-8 py-6 md:px-16 md:py-8 backdrop-blur-sm bg-void/50 border-b border-white/5"
+            className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-6 py-3.5 md:px-12 md:py-5 backdrop-blur-sm bg-void/50 border-b border-white/5"
         >
             {/* Logo */}
             <Link href="/" className="flex flex-col">
                 <motion.h1 
-                    className="font-serif text-2xl md:text-3xl tracking-tight text-platinum"
+                    className="font-serif text-xl md:text-2xl tracking-tight text-platinum"
                     whileHover={{ 
                         y: -2,
                         transition: { 
@@ -51,15 +51,15 @@ export function Header() {
                 >
                     Katerina Voronina
                 </motion.h1>
-                <span className="text-xs uppercase tracking-[0.2em] text-white/40 mt-1 font-sans">
+                <span className="text-[11px] uppercase tracking-[0.12em] text-white/40 mt-0.5 font-sans">
                     {t.portfolioYear}
                 </span>
             </Link>
 
             {/* Right: Social Icons + Language Selector */}
-            <div className="hidden md:flex items-center gap-6">
+            <div className="hidden md:flex items-center gap-4">
                 {/* Social Icons and Links */}
-                <nav className="flex items-center gap-6">
+                <nav className="flex items-center gap-5">
                     {[
                         { icon: Linkedin, href: 'https://www.linkedin.com/in/katerina-voronina-308629a6/', label: 'LinkedIn', isIcon: true },
                         { icon: Instagram, href: 'https://www.instagram.com/katerina.voronina.art', label: 'Instagram', isIcon: true },

@@ -64,26 +64,23 @@ export default function HomePage() {
     const { projects: designingProjects } = useProjectsByCategory('designing');
     const { projects: drawingsProjects } = useProjectsByCategory('drawings');
 
-    // Get first 2 featured or latest projects from each category
-    const featuredInterfaces = designingProjects
-        .sort((a, b) => {
-            // Priorizar proyectos destacados
-            if (a.featured && !b.featured) return -1;
-            if (!a.featured && b.featured) return 1;
-            // Luego por order_index
-            return (a.order_index || 0) - (b.order_index || 0);
-        })
-        .slice(0, 2);
+    // Mostrar todos los proyectos de designing (ordenados priorizando destacados y order_index)
+    const featuredInterfaces = [...designingProjects].sort((a, b) => {
+        // Priorizar proyectos destacados
+        if (a.featured && !b.featured) return -1;
+        if (!a.featured && b.featured) return 1;
+        // Luego por order_index
+        return (a.order_index || 0) - (b.order_index || 0);
+    });
     
-    const featuredDrawings = drawingsProjects
-        .sort((a, b) => {
-            // Priorizar proyectos destacados
-            if (a.featured && !b.featured) return -1;
-            if (!a.featured && b.featured) return 1;
-            // Luego por order_index
-            return (a.order_index || 0) - (b.order_index || 0);
-        })
-        .slice(0, 2);
+    // Mantener solo dos proyectos de drawings como antes
+    const featuredDrawings = [...drawingsProjects].sort((a, b) => {
+        // Priorizar proyectos destacados
+        if (a.featured && !b.featured) return -1;
+        if (!a.featured && b.featured) return 1;
+        // Luego por order_index
+        return (a.order_index || 0) - (b.order_index || 0);
+    }).slice(0, 2);
 
     return (
         <div ref={containerRef}>

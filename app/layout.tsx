@@ -1,18 +1,12 @@
 import type { Metadata } from 'next';
-import { Playfair_Display, Inter } from 'next/font/google';
+import { Bricolage_Grotesque } from 'next/font/google';
 import './globals.css';
 import { AuroraBackground } from '@/components/layout/AuroraBackground';
 import { ClientLayout } from '@/components/layout/ClientLayout';
 
-const playfair = Playfair_Display({
+const bricolageGrotesque = Bricolage_Grotesque({
     subsets: ['latin'],
-    variable: '--font-playfair',
-    display: 'swap',
-});
-
-const inter = Inter({
-    subsets: ['latin'],
-    variable: '--font-inter',
+    variable: '--font-bricolage',
     display: 'swap',
 });
 
@@ -33,11 +27,25 @@ export const metadata: Metadata = {
         title: 'Katerina Voronina - Digital Artisan Portfolio',
         description: 'Crafting digital silence & substance through interface design and artistic drawings.',
         siteName: 'Katerina Voronina Portfolio',
+        images: [
+            {
+                url: '/kv-logo.png',
+                width: 1200,
+                height: 1200,
+                alt: 'Katerina Voronina Monogram',
+            },
+        ],
     },
     twitter: {
         card: 'summary_large_image',
         title: 'Katerina Voronina - Digital Artisan Portfolio',
         description: 'Crafting digital silence & substance through interface design and artistic drawings.',
+        images: ['/kv-logo.png'],
+    },
+    icons: {
+        icon: '/kv-logo.png',
+        shortcut: '/kv-logo.png',
+        apple: '/kv-logo.png',
     },
 };
 
@@ -47,7 +55,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en" className={`${playfair.variable} ${inter.variable}`}>
+        <html lang="en" className={`${bricolageGrotesque.variable}`}>
             <body className="relative min-h-screen text-platinum selection:bg-amethyst-dark selection:text-white">
                 <AuroraBackground />
                 <ClientLayout>{children}</ClientLayout>

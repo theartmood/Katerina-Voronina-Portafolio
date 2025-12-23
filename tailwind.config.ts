@@ -14,23 +14,23 @@ const config: Config = {
                 platinum: '#e5e5e5',
             },
             fontFamily: {
-                serif: ['Playfair Display', 'serif'],
-                sans: ['Inter', 'sans-serif'],
+                serif: ['Bricolage Grotesque', 'serif'],
+                sans: ['Bricolage Grotesque', 'sans-serif'],
             },
             fontSize: {
-                'xs': ['0.84rem', { lineHeight: '1.2rem' }],      // 20% bigger than 0.75rem
-                'sm': ['1.008rem', { lineHeight: '1.44rem' }],    // 20% bigger than 0.875rem
-                'base': ['1.2rem', { lineHeight: '1.8rem' }],     // 20% bigger than 1rem
-                'lg': ['1.296rem', { lineHeight: '1.92rem' }],    // 20% bigger than 1.125rem
-                'xl': ['1.44rem', { lineHeight: '2.04rem' }],     // 20% bigger than 1.25rem
-                '2xl': ['1.8rem', { lineHeight: '2.4rem' }],      // 20% bigger than 1.5rem
-                '3xl': ['2.16rem', { lineHeight: '2.64rem' }],    // 20% bigger than 1.875rem
-                '4xl': ['2.64rem', { lineHeight: '3rem' }],       // 20% bigger than 2.25rem
-                '5xl': ['3.6rem', { lineHeight: '1.1' }],         // 20% bigger than 3rem
-                '6xl': ['4.32rem', { lineHeight: '1.1' }],        // 20% bigger than 3.75rem
-                '7xl': ['5.4rem', { lineHeight: '1.1' }],         // 20% bigger than 4.5rem
-                '8xl': ['7.2rem', { lineHeight: '1.1' }],         // 20% bigger than 6rem
-                '9xl': ['9.6rem', { lineHeight: '1.1' }],         // 20% bigger than 8rem
+                'xs': ['0.8rem', { lineHeight: '1.15' }],        // Minimalist small text (6% larger)
+                'sm': ['0.93rem', { lineHeight: '1.32' }],       // Clean small text (6% larger)
+                'base': ['1.06rem', { lineHeight: '1.59' }],     // Standard readable size (6% larger)
+                'lg': ['1.19rem', { lineHeight: '1.85' }],       // Slightly larger for emphasis (6% larger)
+                'xl': ['1.33rem', { lineHeight: '1.85' }],       // Professional heading size (6% larger)
+                '2xl': ['1.59rem', { lineHeight: '2.12' }],      // Section headers (6% larger)
+                '3xl': ['1.99rem', { lineHeight: '2.38' }],      // Main headings (6% larger)
+                '4xl': ['2.39rem', { lineHeight: '2.65' }],      // Hero titles (6% larger)
+                '5xl': ['3.18rem', { lineHeight: '1.15' }],      // Large display (6% larger)
+                '6xl': ['3.98rem', { lineHeight: '1.15' }],      // Extra large display (6% larger)
+                '7xl': ['4.77rem', { lineHeight: '1.15' }],      // Massive display (6% larger)
+                '8xl': ['6.36rem', { lineHeight: '1.1' }],       // Ultra display (6% larger)
+                '9xl': ['8.48rem', { lineHeight: '1.1' }],       // Maximum impact (6% larger)
             },
             animation: {
                 blob: 'blob 7s infinite',
