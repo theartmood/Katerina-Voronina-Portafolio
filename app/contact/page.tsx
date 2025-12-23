@@ -58,7 +58,10 @@ export default function ContactPage() {
             try {
                 responseData = JSON.parse(responseText);
             } catch (e) {
-                responseData = { raw: responseText, parseError: e.message };
+                responseData = { 
+                    raw: responseText, 
+                    parseError: e instanceof Error ? e.message : String(e) 
+                };
             }
             
             console.log('📥 Respuesta de SheetDB:', {
