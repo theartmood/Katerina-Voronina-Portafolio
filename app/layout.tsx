@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Bricolage_Grotesque } from 'next/font/google';
 import './globals.css';
 import { AuroraBackground } from '@/components/layout/AuroraBackground';
+import { UnicornBackground } from '@/components/layout/UnicornBackground';
 import { ClientLayout } from '@/components/layout/ClientLayout';
 
 const bricolageGrotesque = Bricolage_Grotesque({
@@ -58,6 +59,7 @@ export default function RootLayout({
         <html lang="en" className={`${bricolageGrotesque.variable}`}>
             <body className="relative min-h-screen text-platinum selection:bg-amethyst-dark selection:text-white">
                 <AuroraBackground />
+                <UnicornBackground />
                 <ClientLayout>{children}</ClientLayout>
             </body>
         </html>

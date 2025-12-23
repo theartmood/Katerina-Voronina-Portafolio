@@ -24,77 +24,75 @@ export default function ContactPage() {
         setErrorMessage('');
 
         try {
-            // Intentar enviar a SheetDB si está configurado
-            const sheetDbUrl = process.env.NEXT_PUBLIC_SHEETDB_URL || 'https://sheetdb.io/api/v1/ezqlumxug5dnn';
+            // URL hardcodeada de SheetDB
+            const sheetDbUrl = 'https://sheetdb.io/api/v1/ezqlumxug5dnn';
+            
+            // SheetDB requiere que los nombres de las propiedades coincidan EXACTAMENTE con los nombres de las columnas en Google Sheets
+            // IMPORTANTE: Los nombres deben coincidir exactamente: "Name", "Email", "Subject", "Message" (con mayúsculas)
+            const payload = {
+                Name: formData.name,
+                Email: formData.email,
+                Subject: formData.subject,
+                Message: formData.message
+            };
+
+            console.log('📤 Enviando a SheetDB:', {
+                url: sheetDbUrl,
+                payload: payload,
+                '⚠️ IMPORTANTE': 'Verifica que los nombres de las columnas en Google Sheets sean exactamente: Name, Email, Subject, Message'
+            });
+
+            const response = await fetch(sheetDbUrl, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            // Intentar leer la respuesta como texto primero para mejor debugging
+            const responseText = await response.text();
+            let responseData;
             
             try {
-                // SheetDB puede aceptar diferentes formatos, intentamos el formato directo primero
-                const payload = {
-                    name: formData.name,
-                    email: formData.email,
-                    subject: formData.subject,
-                    message: formData.message,
-                    date: new Date().toISOString()
-                };
-
-                const response = await fetch(sheetDbUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(payload)
-                });
-
-                const responseData = await response.json().catch(() => null);
-                
-                if (!response.ok) {
-                    console.error('SheetDB error response:', {
-                        status: response.status,
-                        statusText: response.statusText,
-                        data: responseData
-                    });
-                    throw new Error(`SheetDB request failed: ${response.status} ${response.statusText}`);
-                }
-
-                console.log('SheetDB success:', responseData);
-
-                // Éxito con SheetDB
-                setFormState('success');
-                
-                // Reset form after success
-                setTimeout(() => {
-                    setFormState('idle');
-                    setFormData({ name: '', email: '', subject: '', message: '' });
-                }, 3000);
-            } catch (sheetDbError) {
-                // Si SheetDB falla, usar mailto como fallback
-                console.warn('SheetDB not available, using mailto fallback:', sheetDbError);
-                
-                // Crear mailto link
-                const subject = encodeURIComponent(formData.subject);
-                const body = encodeURIComponent(
-                    `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
-                );
-                const mailtoLink = `mailto:ekater.voronina@gmail.com?subject=${subject}&body=${body}`;
-                
-                // Abrir cliente de email
-                window.location.href = mailtoLink;
-                
-                // Mostrar mensaje de éxito
-                setFormState('success');
-                setErrorMessage('');
-                
-                // Reset form after success
-                setTimeout(() => {
-                    setFormState('idle');
-                    setFormData({ name: '', email: '', subject: '', message: '' });
-                }, 3000);
+                responseData = JSON.parse(responseText);
+            } catch (e) {
+                responseData = { raw: responseText, parseError: e.message };
             }
+            
+            console.log('📥 Respuesta de SheetDB:', {
+                status: response.status,
+                statusText: response.statusText,
+                ok: response.ok,
+                data: responseData
+            });
+            
+            if (!response.ok) {
+                console.error('❌ SheetDB error response:', {
+                    status: response.status,
+                    statusText: response.statusText,
+                    data: responseData,
+                    payload: payload,
+                    '💡 SOLUCIÓN': 'Verifica que los nombres de las columnas en Google Sheets coincidan exactamente con: Name, Email, Subject, Message (con mayúsculas)'
+                });
+                throw new Error(`SheetDB request failed: ${response.status} ${response.statusText}. Response: ${JSON.stringify(responseData)}`);
+            }
+
+            console.log('✅ SheetDB success:', responseData);
+
+            // Éxito con SheetDB
+            setFormState('success');
+            
+            // Reset form after success
+            setTimeout(() => {
+                setFormState('idle');
+                setFormData({ name: '', email: '', subject: '', message: '' });
+            }, 3000);
         } catch (error) {
             console.error('Error sending message:', error);
             setFormState('error');
-            setErrorMessage('Failed to send message. Please contact directly via email: ekater.voronina@gmail.com');
+            setErrorMessage('Failed to send message. Please try again or contact directly via email: ekater.voronina@gmail.com');
             
             // Reset error state after 5 seconds
             setTimeout(() => {
