@@ -11,6 +11,7 @@ interface UnicornSceneProps {
     dpi?: number;
     lazyLoad?: boolean;
     production?: boolean;
+    fps?: number;
 }
 
 export function UnicornScene({
@@ -22,6 +23,7 @@ export function UnicornScene({
     dpi = 1.5,
     lazyLoad = true,
     production = true,
+    fps = 60,
 }: UnicornSceneProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const scriptLoadedRef = useRef(false);
@@ -61,6 +63,7 @@ export function UnicornScene({
             data-us-dpi={dpi}
             data-us-lazyload={lazyLoad ? 'true' : 'false'}
             data-us-production={production ? 'true' : 'false'}
+            data-us-fps={fps}
             style={{
                 width: typeof width === 'number' ? `${width}px` : width,
                 height: typeof height === 'number' ? `${height}px` : height,
