@@ -140,9 +140,12 @@ export interface Translations {
     adminDeleteImageError: string;
     adminSetCoverError: string;
     adminReorderImagesError: string;
-        adminImagesPending: string;
-        adminImagesAutoUpload: string;
-        adminAddImagesLater: string;
+    adminImagesPending: string;
+    adminImagesAutoUpload: string;
+    adminAddImagesLater: string;
+    adminInvalidImages: string;
+    adminNoImages: string;
+    adminDragHint: string;
         
         // Admin - Image Uploader
         adminDragImagesHere: string;
@@ -295,6 +298,9 @@ export const translations: Record<Language, Translations> = {
         adminDeleteImageError: 'Error deleting image',
         adminSetCoverError: 'Error setting cover image',
         adminReorderImagesError: 'Error reordering images',
+        adminInvalidImages: 'image(s) have invalid URLs and will not display correctly.',
+        adminNoImages: 'No images yet. Upload images below.',
+        adminDragHint: 'Drag images to reorder them. The order will be saved automatically.',
         adminImagesPending: 'image(s) ready',
         adminImagesAutoUpload: 'Will be uploaded automatically when creating the project.',
         adminAddImagesLater: '💡 You can add images now or after creating the project',
@@ -438,6 +444,9 @@ export const translations: Record<Language, Translations> = {
         adminDeleteImageError: 'Error al eliminar imagen',
         adminSetCoverError: 'Error al establecer portada',
         adminReorderImagesError: 'Error al reordenar imágenes',
+        adminInvalidImages: 'imagen(es) tienen URLs inválidas y no se mostrarán correctamente.',
+        adminNoImages: 'Aún no hay imágenes. Sube imágenes a continuación.',
+        adminDragHint: 'Arrastra las imágenes para reordenarlas. El orden se guardará automáticamente.',
         adminImagesPending: 'imagen(es) lista(s)',
         adminImagesAutoUpload: 'Se subirá(n) automáticamente al crear el proyecto.',
         adminAddImagesLater: '💡 Puedes agregar imágenes ahora o después de crear el proyecto',
@@ -581,6 +590,9 @@ export const translations: Record<Language, Translations> = {
         adminDeleteImageError: 'Ошибка удаления изображения',
         adminSetCoverError: 'Ошибка установки обложки',
         adminReorderImagesError: 'Ошибка переупорядочивания изображений',
+        adminInvalidImages: 'изображение(я) имеют недействительные URL и не будут отображаться правильно.',
+        adminNoImages: 'Пока нет изображений. Загрузите изображения ниже.',
+        adminDragHint: 'Перетащите изображения, чтобы изменить их порядок. Порядок будет сохранен автоматически.',
         adminImagesPending: 'изображение(я) готово(ы)',
         adminImagesAutoUpload: 'Будет загружено автоматически при создании проекта.',
         adminAddImagesLater: '💡 Вы можете добавить изображения сейчас или после создания проекта',

@@ -72,14 +72,17 @@ export async function getAllProjects(): Promise<ProjectWithImages[]> {
             throw projectsError;
         }
 
+        // Importar función de validación
+        const { isValidImageUrl } = await import('@/lib/utils/image-optimization');
+        
         return (projects || []).map(p => {
             // Validar y filtrar imágenes con URLs válidas
-            const validImages = (p.images || []).filter((img: ProjectImage) => 
-                img && 
-                img.public_url && 
-                typeof img.public_url === 'string' &&
-                (img.public_url.startsWith('http') || img.public_url.startsWith('/'))
-            );
+            const validImages = (p.images || []).filter((img: ProjectImage) => {
+                if (!img || !img.public_url || typeof img.public_url !== 'string') {
+                    return false;
+                }
+                return isValidImageUrl(img.public_url);
+            });
 
             return {
                 ...p,
@@ -138,12 +141,16 @@ export async function getProjectBySlug(slug: string): Promise<ProjectWithImages 
         }
 
         // Validar y filtrar imágenes con URLs válidas
-        const validImages = (images || []).filter((img: ProjectImage) => 
-            img && 
-            img.public_url && 
-            typeof img.public_url === 'string' &&
-            (img.public_url.startsWith('http') || img.public_url.startsWith('/'))
-        );
+        // Importar función de validación
+        const { isValidImageUrl } = await import('@/lib/utils/image-optimization');
+        
+        const validImages = (images || []).filter((img: ProjectImage) => {
+            if (!img || !img.public_url || typeof img.public_url !== 'string') {
+                return false;
+            }
+            // Validar formato de URL
+            return isValidImageUrl(img.public_url);
+        });
 
         return {
             ...project,
@@ -239,14 +246,17 @@ export async function getProjectsByCategory(
             throw error;
         }
 
+        // Importar función de validación
+        const { isValidImageUrl } = await import('@/lib/utils/image-optimization');
+        
         return (projects || []).map(p => {
             // Validar y filtrar imágenes con URLs válidas
-            const validImages = (p.images || []).filter((img: ProjectImage) => 
-                img && 
-                img.public_url && 
-                typeof img.public_url === 'string' &&
-                (img.public_url.startsWith('http') || img.public_url.startsWith('/'))
-            );
+            const validImages = (p.images || []).filter((img: ProjectImage) => {
+                if (!img || !img.public_url || typeof img.public_url !== 'string') {
+                    return false;
+                }
+                return isValidImageUrl(img.public_url);
+            });
 
             return {
                 ...p,

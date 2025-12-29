@@ -83,6 +83,7 @@ export function OptimizedImage({
                 sizes={sizes}
                 className={`transition-opacity duration-500 ${loaded ? 'opacity-100' : 'opacity-0'
                     } ${className}`}
+                style={{ display: 'block' }}
                 onLoad={() => setLoaded(true)}
                 onError={() => {
                     console.warn('Error loading image:', normalizedUrl);

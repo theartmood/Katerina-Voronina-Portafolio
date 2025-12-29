@@ -35,7 +35,7 @@ export function Header() {
             initial={{ y: -100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ ...SPRING_TRANSITION, delay: 0.5 }}
-            className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-6 py-3.5 md:px-12 md:py-5 backdrop-blur-sm bg-void/50 border-b border-white/5"
+            className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-3.5 md:px-12 md:py-5 backdrop-blur-md bg-void/80 border-b border-white/10"
         >
             {/* Logo */}
             <Link href="/" className="flex flex-col">

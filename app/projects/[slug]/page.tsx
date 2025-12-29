@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { Container } from '@/components/ui/Container';
 import { OptimizedImage } from '@/components/ui/OptimizedImage';
-import { ProjectGallery } from '@/components/projects/ProjectGallery';
+import { ProjectScrollView } from '@/components/projects/ProjectScrollView';
 import { getAllProjects, getProjectBySlug } from '@/lib/supabase/queries';
 
 interface ProjectPageProps {
@@ -81,23 +81,25 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             notFound();
         }
 
-        // Validar y filtrar imágenes válidas
-        const validImages = (project.images || []).filter(img => 
-            img.public_url && 
-            (img.public_url.startsWith('http') || img.public_url.startsWith('/'))
-        );
-
-        // Get all images from the project
-        const galleryImages = validImages.map(img => ({
-            url: img.public_url,
-            alt: img.alt_text || project.title,
-            width: img.width || 1600,
-            height: img.height || 1200,
-            blur: img.blur_data_url,
-        }));
+        // Validar y filtrar imágenes válidas, ordenadas por order_index
+        const validImages = (project.images || [])
+            .filter(img => 
+                img && 
+                img.public_url && 
+                typeof img.public_url === 'string' &&
+                (img.public_url.startsWith('http') || img.public_url.startsWith('/'))
+            )
+            .sort((a, b) => a.order_index - b.order_index)
+            .map(img => ({
+                url: img.public_url,
+                alt: img.alt_text || project.title,
+                width: img.width || 1600,
+                height: img.height || 1200,
+                blur: img.blur_data_url,
+            }));
 
     return (
-        <Container className="pt-40 md:pt-60 pb-20">
+        <Container className="pt-32 md:pt-36 pb-20">
             {/* Back Button */}
             <Link
                 href="/projects"
@@ -142,23 +144,8 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 )}
             </div>
 
-            {/* Hero Image */}
-            {galleryImages.length > 0 && (
-                <div className="mb-10 relative overflow-hidden rounded-sm">
-                    <OptimizedImage
-                        src={galleryImages[0].url}
-                        alt={galleryImages[0].alt}
-                        width={galleryImages[0].width}
-                        height={galleryImages[0].height}
-                        blur={galleryImages[0].blur}
-                        priority
-                        className="w-full h-auto"
-                    />
-                </div>
-            )}
-
             {/* Project Details */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 pb-12 border-b border-white/10">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16 pb-12 border-b border-white/10">
                 <div>
                     <h3 className="font-sans text-xs tracking-[0.2em] uppercase text-white/40 mb-3">Category</h3>
                     <p className="font-serif text-xl text-platinum">
@@ -169,7 +156,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                     <h3 className="font-sans text-xs tracking-[0.2em] uppercase text-white/40 mb-3">Year</h3>
                     <p className="font-serif text-xl text-platinum">{project.year}</p>
                 </div>
-                {project.tags && (
+                {project.tags && project.tags.length > 0 && (
                     <div>
                         <h3 className="font-sans text-xs tracking-[0.2em] uppercase text-white/40 mb-3">Medium</h3>
                         <p className="font-serif text-xl text-platinum">{project.tags.join(', ')}</p>
@@ -177,12 +164,9 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 )}
             </div>
 
-            {/* Gallery Section */}
-            {galleryImages.length > 0 && (
-                <div>
-                    <h2 className="font-serif text-3xl md:text-4xl text-platinum mb-8 italic">Gallery</h2>
-                    <ProjectGallery images={galleryImages} />
-                </div>
+            {/* Elegant Scroll View */}
+            {validImages.length > 0 && (
+                <ProjectScrollView images={validImages} projectTitle={project.title} />
             )}
         </Container>
     );

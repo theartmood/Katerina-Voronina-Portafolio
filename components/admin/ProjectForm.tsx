@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Save, Loader2, X, Star, GripVertical } from 'lucide-react';
+import { Save, Loader2 } from 'lucide-react';
 import ImageUploader from './ImageUploader';
+import { ImageManager } from './ImageManager';
 import { uploadImages, deleteProjectImage } from '@/lib/supabase/storage';
 import { createProject, updateProject, addProjectImage, updateProjectImage, type ProjectWithImages, type ProjectImage } from '@/lib/supabase/queries';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
@@ -357,58 +358,19 @@ export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFor
             </div>
 
             {/* Existing Images */}
-            {project && existingImages.length > 0 && (
+            {project && (
                 <div>
                     <h3 className="text-lg font-semibold text-white mb-4">
-                        {t.adminExistingImages} ({existingImages.length})
+                        {t.adminExistingImages || 'Project Images'} ({existingImages.length})
                     </h3>
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
-                        {existingImages.map((image, index) => (
-                            <div
-                                key={image.id}
-                                className="relative group aspect-square rounded-lg overflow-hidden bg-gray-800 border-2 border-transparent hover:border-purple-500/50 transition-all"
-                            >
-                                <img
-                                    src={image.public_url}
-                                    alt={image.alt_text || 'Project image'}
-                                    className="w-full h-full object-cover"
-                                />
-                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/60 transition-colors flex items-center justify-center gap-2">
-                                    <button
-                                        onClick={() => handleSetCover(image.id)}
-                                        className={`p-2 rounded-full ${
-                                            image.is_cover
-                                                ? 'bg-yellow-500 text-black'
-                                                : 'bg-white/20 text-white hover:bg-white/30'
-                                        } transition-colors`}
-                                        title={image.is_cover ? t.adminCoverImage : t.adminSetCoverImage}
-                                    >
-                                        <Star size={16} fill={image.is_cover ? 'currentColor' : 'none'} />
-                                    </button>
-                                    <button
-                                        onClick={() => handleDeleteImage(image.id)}
-                                        disabled={deletingImageId === image.id}
-                                        className="p-2 rounded-full bg-red-500/80 text-white hover:bg-red-500 transition-colors disabled:opacity-50"
-                                        title={t.adminDeleteAction}
-                                    >
-                                        {deletingImageId === image.id ? (
-                                            <Loader2 size={16} className="animate-spin" />
-                                        ) : (
-                                            <X size={16} />
-                                        )}
-                                    </button>
-                                </div>
-                                {image.is_cover && (
-                                    <div className="absolute top-2 left-2 px-2 py-1 bg-yellow-500 text-black text-xs font-semibold rounded">
-                                        {t.adminCoverImage}
-                                    </div>
-                                )}
-                                <div className="absolute bottom-2 left-2 px-2 py-1 bg-black/60 text-white text-xs rounded">
-                                    #{index + 1}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+                    <ImageManager
+                        images={existingImages}
+                        onReorder={handleReorderImages}
+                        onSetCover={handleSetCover}
+                        onDelete={handleDeleteImage}
+                        deletingImageId={deletingImageId}
+                        t={t}
+                    />
                 </div>
             )}
 
