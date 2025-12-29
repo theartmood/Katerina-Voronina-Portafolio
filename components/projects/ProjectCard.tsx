@@ -37,7 +37,7 @@ function DrawingCard({ project, index }: { project: ProjectWithImages; index: nu
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
             transition={{ ...SPRING_TRANSITION, delay: index * 0.1 }}
-            className="group relative cursor-pointer mb-20 md:mb-32 w-full"
+            className="group relative cursor-pointer mb-[7.2rem] md:mb-[9.6rem] w-full"
         >
             <Link href={`/projects/${project.slug}`}>
                 <div 
@@ -90,11 +90,11 @@ function InterfaceCard({ project, index }: { project: ProjectWithImages; index: 
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-10%' }}
             transition={SPRING_TRANSITION}
-            className={`flex flex-col md:flex-row gap-12 md:gap-24 items-center mb-40 ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'
+            className={`flex flex-col md:flex-row gap-10 md:gap-14 items-center mb-[7.2rem] md:mb-[9.6rem] ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'
                 }`}
         >
             {/* Image Side */}
-            <div className="w-full md:w-3/5 relative group cursor-pointer">
+            <div className="w-full md:w-[48%] relative group cursor-pointer">
                 <Link href={`/projects/${project.slug}`}>
                     <div className="overflow-hidden relative rounded-sm">
                         <motion.div
@@ -115,17 +115,22 @@ function InterfaceCard({ project, index }: { project: ProjectWithImages; index: 
             </div>
 
             {/* Text Side */}
-            <div className="w-full md:w-2/5 flex flex-col justify-center">
-                <div className="border-l border-white/20 pl-6 md:pl-8">
-                    <span className="block font-sans text-xs tracking-[0.2em] text-indigo-200/60 mb-4 uppercase">
+            <div className="w-full md:w-[52%] flex flex-col justify-center">
+                <div className="border-l border-white/20 pl-6 md:pl-10 pr-4 md:pr-0">
+                    <span className="block font-sans text-xs tracking-[0.2em] text-indigo-200/60 mb-3 uppercase">
                         Case Study 0{index + 1}
                     </span>
-                    <h3 className="font-serif text-3xl md:text-4xl text-platinum mb-6 leading-tight">
+                    <h3 
+                        className="font-serif text-3xl md:text-4xl lg:text-5xl text-platinum mb-3" 
+                        style={{ lineHeight: '0.95', display: 'block' }}
+                    >
                         {project.title}
                     </h3>
-                    <p className="font-sans text-white/50 leading-relaxed font-light text-lg mb-8">
-                        {project.description}
-                    </p>
+                    {project.description && (
+                        <p className="font-sans text-white/50 leading-relaxed font-light text-base md:text-lg mb-6 max-w-2xl">
+                            {project.description}
+                        </p>
+                    )}
 
                     <Link
                         href={`/projects/${project.slug}`}

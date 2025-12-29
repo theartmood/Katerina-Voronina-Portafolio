@@ -118,11 +118,57 @@ export interface Translations {
     adminFormCreate: string;
     adminFormCancel: string;
     adminFormError: string;
+    
+    // Admin - Project List (New)
+    adminDesigningProjects: string;
+    adminDrawingsProjects: string;
+    adminDesigningDescription: string;
+    adminDrawingsDescription: string;
+    adminDragToReorder: string;
+    adminOrderSaved: string;
+    adminNoProjectsCategory: string;
+    adminOrderLabel: string;
+    adminOrderValue: string;
+    adminProjectsCount: string;
+    
+    // Admin - Project Form (New)
+    adminExistingImages: string;
+    adminAddNewImages: string;
+    adminDeleteImageConfirm: string;
+    adminSetCoverImage: string;
+    adminCoverImage: string;
+    adminDeleteImageError: string;
+    adminSetCoverError: string;
+    adminReorderImagesError: string;
+        adminImagesPending: string;
+        adminImagesAutoUpload: string;
+        adminAddImagesLater: string;
+        
+        // Admin - Image Uploader
+        adminDragImagesHere: string;
+        adminClickToSelect: string;
+        adminMaxImages: string;
+        adminMaxSizeEach: string;
+        adminImagesUploadedSuccess: string;
+        adminUploadingImages: string;
+        adminUploadImages: string;
+        adminUploadProgress: string;
+        adminOptimizingImages: string;
 }
+
+// Helper function to get current year suffix (e.g., '25 for 2025)
+const getYearSuffix = (): string => {
+    if (typeof window !== 'undefined' || typeof global !== 'undefined') {
+        const year = new Date().getFullYear();
+        return year.toString().slice(-2);
+    }
+    // Fallback for SSR
+    return new Date().getFullYear().toString().slice(-2);
+};
 
 export const translations: Record<Language, Translations> = {
     en: {
-        portfolioYear: "Portfolio '25",
+        portfolioYear: `Portfolio '${getYearSuffix()}`,
         
         heroSubtitle: 'Digital Artisan',
         heroTitle1: 'Crafting digital',
@@ -158,7 +204,7 @@ export const translations: Record<Language, Translations> = {
         successMessage: "I'll get back to you shortly",
         orReachOut: 'Or reach out directly',
         
-        footerCopyright: '© 2025 Katerina Voronina',
+        footerCopyright: `© ${new Date().getFullYear()} Katerina Voronina`,
         footerCredit: 'BY ALIA STUDIO',
         
         caseStudy: 'Case Study',
@@ -227,9 +273,45 @@ export const translations: Record<Language, Translations> = {
         adminFormCreate: 'Create',
         adminFormCancel: 'Cancel',
         adminFormError: 'Error saving project',
+        
+        // Admin - Project List (New)
+        adminDesigningProjects: 'Design Projects (Designing)',
+        adminDrawingsProjects: 'Drawing Projects (Drawings)',
+        adminDesigningDescription: 'Reorder these projects to control how they appear on the main page. The first project will be displayed first.',
+        adminDrawingsDescription: 'Reorder these projects to control how they appear on the Art Portfolio page. The first project will be displayed first.',
+        adminDragToReorder: 'Drag',
+        adminOrderSaved: 'The order is saved automatically and reflected on the main page.',
+        adminNoProjectsCategory: 'No {category} projects yet',
+        adminOrderLabel: 'Order',
+        adminOrderValue: 'order',
+        adminProjectsCount: 'project',
+        
+        // Admin - Project Form (New)
+        adminExistingImages: 'Existing Images',
+        adminAddNewImages: 'Add New Images',
+        adminDeleteImageConfirm: 'Delete this image? This action cannot be undone.',
+        adminSetCoverImage: 'Set as cover',
+        adminCoverImage: 'Cover',
+        adminDeleteImageError: 'Error deleting image',
+        adminSetCoverError: 'Error setting cover image',
+        adminReorderImagesError: 'Error reordering images',
+        adminImagesPending: 'image(s) ready',
+        adminImagesAutoUpload: 'Will be uploaded automatically when creating the project.',
+        adminAddImagesLater: '💡 You can add images now or after creating the project',
+        
+        // Admin - Image Uploader
+        adminDragImagesHere: 'Drag images here or click to select',
+        adminClickToSelect: 'click to select',
+        adminMaxImages: 'Maximum',
+        adminMaxSizeEach: 'each',
+        adminImagesUploadedSuccess: 'Images uploaded successfully with automatic optimization!',
+        adminUploadingImages: 'Uploading',
+        adminUploadImages: 'Upload',
+        adminUploadProgress: 'Uploading',
+        adminOptimizingImages: 'Optimizing and generating blur placeholders...',
     },
     es: {
-        portfolioYear: "Portafolio '25",
+        portfolioYear: `Portafolio '${getYearSuffix()}`,
         
         heroSubtitle: 'Artesana Digital',
         heroTitle1: 'Creando',
@@ -265,7 +347,7 @@ export const translations: Record<Language, Translations> = {
         successMessage: 'Te responderé pronto',
         orReachOut: 'O contáctame directamente',
         
-        footerCopyright: '© 2025 Katerina Voronina',
+        footerCopyright: `© ${new Date().getFullYear()} Katerina Voronina`,
         footerCredit: 'POR ALIA STUDIO',
         
         caseStudy: 'Caso de Estudio',
@@ -334,9 +416,45 @@ export const translations: Record<Language, Translations> = {
         adminFormCreate: 'Crear',
         adminFormCancel: 'Cancelar',
         adminFormError: 'Error al guardar proyecto',
+        
+        // Admin - Project List (New)
+        adminDesigningProjects: 'Proyectos de Diseño (Designing)',
+        adminDrawingsProjects: 'Proyectos de Dibujos (Drawings)',
+        adminDesigningDescription: 'Ordena estos proyectos para controlar cómo aparecen en la página principal. El primer proyecto será el que se muestre primero.',
+        adminDrawingsDescription: 'Ordena estos proyectos para controlar cómo aparecen en la página de Art Portfolio. El primer proyecto será el que se muestre primero.',
+        adminDragToReorder: 'Arrastra',
+        adminOrderSaved: 'El orden se guarda automáticamente y se refleja en la página principal.',
+        adminNoProjectsCategory: 'No hay proyectos de {category} aún',
+        adminOrderLabel: 'Orden',
+        adminOrderValue: 'orden',
+        adminProjectsCount: 'proyecto',
+        
+        // Admin - Project Form (New)
+        adminExistingImages: 'Imágenes Existentes',
+        adminAddNewImages: 'Agregar Nuevas Imágenes',
+        adminDeleteImageConfirm: '¿Eliminar esta imagen? Esta acción no se puede deshacer.',
+        adminSetCoverImage: 'Establecer como portada',
+        adminCoverImage: 'Portada',
+        adminDeleteImageError: 'Error al eliminar imagen',
+        adminSetCoverError: 'Error al establecer portada',
+        adminReorderImagesError: 'Error al reordenar imágenes',
+        adminImagesPending: 'imagen(es) lista(s)',
+        adminImagesAutoUpload: 'Se subirá(n) automáticamente al crear el proyecto.',
+        adminAddImagesLater: '💡 Puedes agregar imágenes ahora o después de crear el proyecto',
+        
+        // Admin - Image Uploader
+        adminDragImagesHere: 'Arrastra imágenes aquí o haz clic para seleccionar',
+        adminClickToSelect: 'haz clic para seleccionar',
+        adminMaxImages: 'Máximo',
+        adminMaxSizeEach: 'cada una',
+        adminImagesUploadedSuccess: '¡Imágenes subidas exitosamente con optimización automática!',
+        adminUploadingImages: 'Subiendo',
+        adminUploadImages: 'Subir',
+        adminUploadProgress: 'Subiendo',
+        adminOptimizingImages: 'Optimizando y generando blur placeholders...',
     },
     ru: {
-        portfolioYear: "Портфолио '25",
+        portfolioYear: `Портфолио '${getYearSuffix()}`,
         
         heroSubtitle: 'Цифровой Мастер',
         heroTitle1: 'Создавая цифровую',
@@ -441,6 +559,42 @@ export const translations: Record<Language, Translations> = {
         adminFormCreate: 'Создать',
         adminFormCancel: 'Отмена',
         adminFormError: 'Ошибка сохранения проекта',
+        
+        // Admin - Project List (New)
+        adminDesigningProjects: 'Проекты Дизайна (Designing)',
+        adminDrawingsProjects: 'Проекты Рисунков (Drawings)',
+        adminDesigningDescription: 'Переупорядочьте эти проекты, чтобы контролировать, как они появляются на главной странице. Первый проект будет отображаться первым.',
+        adminDrawingsDescription: 'Переупорядочьте эти проекты, чтобы контролировать, как они появляются на странице Art Portfolio. Первый проект будет отображаться первым.',
+        adminDragToReorder: 'Перетащите',
+        adminOrderSaved: 'Порядок сохраняется автоматически и отражается на главной странице.',
+        adminNoProjectsCategory: 'Пока нет проектов {category}',
+        adminOrderLabel: 'Порядок',
+        adminOrderValue: 'порядок',
+        adminProjectsCount: 'проект',
+        
+        // Admin - Project Form (New)
+        adminExistingImages: 'Существующие Изображения',
+        adminAddNewImages: 'Добавить Новые Изображения',
+        adminDeleteImageConfirm: 'Удалить это изображение? Это действие нельзя отменить.',
+        adminSetCoverImage: 'Установить обложкой',
+        adminCoverImage: 'Обложка',
+        adminDeleteImageError: 'Ошибка удаления изображения',
+        adminSetCoverError: 'Ошибка установки обложки',
+        adminReorderImagesError: 'Ошибка переупорядочивания изображений',
+        adminImagesPending: 'изображение(я) готово(ы)',
+        adminImagesAutoUpload: 'Будет загружено автоматически при создании проекта.',
+        adminAddImagesLater: '💡 Вы можете добавить изображения сейчас или после создания проекта',
+        
+        // Admin - Image Uploader
+        adminDragImagesHere: 'Перетащите изображения сюда или нажмите, чтобы выбрать',
+        adminClickToSelect: 'нажмите, чтобы выбрать',
+        adminMaxImages: 'Максимум',
+        adminMaxSizeEach: 'каждое',
+        adminImagesUploadedSuccess: 'Изображения успешно загружены с автоматической оптимизацией!',
+        adminUploadingImages: 'Загрузка',
+        adminUploadImages: 'Загрузить',
+        adminUploadProgress: 'Загрузка',
+        adminOptimizingImages: 'Оптимизация и создание blur placeholders...',
     },
 };
 

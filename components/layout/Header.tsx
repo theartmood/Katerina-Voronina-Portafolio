@@ -67,28 +67,53 @@ export function Header() {
                         { icon: Mail, href: 'mailto:ekater.voronina@gmail.com', label: 'Email', isIcon: true },
                         { href: 'https://www.behance.net/ekatervoroc3c2', label: 'BEHANCE', isIcon: false },
                         { href: 'https://dribbble.com/EkaterinaVoronina', label: 'DRIBBBLE', isIcon: false },
-                    ].map((item, i) => (
-                        <motion.a
-                            key={i}
-                            href={item.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label={item.label}
-                            className="text-white/60 hover:text-white transition-colors duration-500"
-                            whileHover={{ 
-                                y: -2,
-                                letterSpacing: item.isIcon ? '0em' : '0.1em',
-                                transition: { duration: 0.4, ease: [0.33, 1, 0.68, 1] }
-                            }}
-                            whileTap={{ scale: 0.95 }}
-                        >
-                            {item.isIcon && item.icon ? (
-                                <item.icon size={18} />
-                            ) : (
-                                <span className="font-sans text-[10px] tracking-[0.15em]">{item.label}</span>
-                        )}
-                    </motion.a>
-                ))}
+                        { href: '/drawings', label: 'ART PORTFOLIO', isIcon: false, isInternal: true },
+                    ].map((item, i) => {
+                        if (item.isInternal) {
+                            return (
+                                <motion.div
+                                    key={i}
+                                    whileHover={{ 
+                                        y: -2,
+                                        letterSpacing: '0.1em',
+                                        transition: { duration: 0.4, ease: [0.33, 1, 0.68, 1] }
+                                    }}
+                                    whileTap={{ scale: 0.95 }}
+                                >
+                                    <Link
+                                        href={item.href}
+                                        aria-label={item.label}
+                                        className="text-white/60 hover:text-white transition-colors duration-500"
+                                    >
+                                        <span className="font-sans text-[10px] tracking-[0.15em]">{item.label}</span>
+                                    </Link>
+                                </motion.div>
+                            );
+                        }
+                        
+                        return (
+                            <motion.a
+                                key={i}
+                                href={item.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label={item.label}
+                                className="text-white/60 hover:text-white transition-colors duration-500"
+                                whileHover={{ 
+                                    y: -2,
+                                    letterSpacing: item.isIcon ? '0em' : '0.1em',
+                                    transition: { duration: 0.4, ease: [0.33, 1, 0.68, 1] }
+                                }}
+                                whileTap={{ scale: 0.95 }}
+                            >
+                                {item.isIcon && item.icon ? (
+                                    <item.icon size={18} />
+                                ) : (
+                                    <span className="font-sans text-[10px] tracking-[0.15em]">{item.label}</span>
+                                )}
+                            </motion.a>
+                        );
+                    })}
             </nav>
             
             {/* Divider */}

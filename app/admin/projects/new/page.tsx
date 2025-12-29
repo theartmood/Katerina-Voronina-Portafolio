@@ -4,8 +4,10 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import ProjectForm from '@/components/admin/ProjectForm';
+import { useLanguage } from '@/lib/i18n/LanguageContext';
 
 export default function NewProjectPage() {
+    const { t } = useLanguage();
     const router = useRouter();
 
     return (
@@ -18,11 +20,11 @@ export default function NewProjectPage() {
                         className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-4"
                     >
                         <ArrowLeft className="w-4 h-4" />
-                        Volver al panel
+                        {t.adminBackToPanel}
                     </Link>
 
-                    <h1 className="text-4xl font-serif font-bold mb-2">Nuevo Proyecto</h1>
-                    <p className="text-gray-400">Crea un nuevo proyecto para tu portafolio</p>
+                    <h1 className="text-4xl font-serif font-bold mb-2">{t.adminNewProjectTitle}</h1>
+                    <p className="text-gray-400">{t.adminCreateProject}</p>
                 </div>
 
                 {/* Form */}

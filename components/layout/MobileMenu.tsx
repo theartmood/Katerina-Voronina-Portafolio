@@ -200,7 +200,7 @@ export function MobileMenu() {
                                     className="mt-8 pt-6 border-t border-white/10"
                                 >
                                     <p className="text-[10px] uppercase tracking-wider text-white/20 font-sans text-center">
-                                        © 2025 Katerina Voronina
+                                        © {new Date().getFullYear()} Katerina Voronina
                                     </p>
                                 </motion.div>
                             </div>

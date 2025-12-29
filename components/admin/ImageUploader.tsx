@@ -3,6 +3,7 @@
 import { useState, useCallback } from 'react';
 import { Upload, X, Image as ImageIcon, CheckCircle2 } from 'lucide-react';
 import { isValidImageFile } from '@/lib/utils/image-optimization';
+import { useLanguage } from '@/lib/i18n/LanguageContext';
 
 interface ImageFile {
     file: File;
@@ -23,6 +24,7 @@ export default function ImageUploader({
     maxSizeMB = 50,
     acceptedFormats = ['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'image/gif']
 }: ImageUploaderProps) {
+    const { t } = useLanguage();
     const [images, setImages] = useState<ImageFile[]>([]);
     const [isDragging, setIsDragging] = useState(false);
     const [uploading, setUploading] = useState(false);
@@ -34,18 +36,18 @@ export default function ImageUploader({
 
     const validateFile = (file: File): string | null => {
         if (!acceptedFormats.includes(file.type)) {
-            return `${file.name} - formato no permitido. Formatos aceptados: ${acceptedFormats.map(f => f.split('/')[1]).join(', ')}`;
+            return `${file.name} - format not allowed. Accepted formats: ${acceptedFormats.map(f => f.split('/')[1]).join(', ')}`;
         }
 
         const sizeMB = file.size / (1024 * 1024);
         if (sizeMB > maxSizeMB) {
-            return `${file.name} excede el tamaño máximo de ${maxSizeMB}MB (actual: ${sizeMB.toFixed(2)}MB)`;
+            return `${file.name} exceeds maximum size of ${maxSizeMB}MB (current: ${sizeMB.toFixed(2)}MB)`;
         }
 
         try {
             isValidImageFile(file);
         } catch (err) {
-            return err instanceof Error ? err.message : 'Archivo no válido';
+            return err instanceof Error ? err.message : 'Invalid file';
         }
 
         return null;
@@ -59,7 +61,7 @@ export default function ImageUploader({
 
         // Validate total count
         if (images.length + fileArray.length > maxFiles) {
-            setError(`Máximo ${maxFiles} imágenes permitidas`);
+            setError(`Maximum ${maxFiles} images allowed`);
             return;
         }
 
@@ -141,7 +143,7 @@ export default function ImageUploader({
             // Auto-hide success message
             setTimeout(() => setSuccess(false), 3000);
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Error al subir imágenes');
+            setError(err instanceof Error ? err.message : 'Error uploading images');
         } finally {
             setUploading(false);
         }
@@ -183,10 +185,10 @@ export default function ImageUploader({
 
                     <div>
                         <p className="text-lg font-medium text-gray-200">
-                            Arrastra imágenes aquí o haz clic para seleccionar
+                            {t.adminDragImagesHere}
                         </p>
                         <p className="text-sm text-gray-400 mt-1">
-                            Máximo {maxFiles} imágenes, {maxSizeMB}MB cada una
+                            {t.adminMaxImages} {maxFiles} images, {maxSizeMB}MB {t.adminMaxSizeEach}
                         </p>
                     </div>
                 </label>
@@ -203,7 +205,7 @@ export default function ImageUploader({
             {success && (
                 <div className="bg-green-500/10 border border-green-500/50 rounded-lg p-4 text-green-400 text-sm flex items-center gap-2">
                     <CheckCircle2 className="w-5 h-5" />
-                    ¡Imágenes subidas exitosamente con optimización automática!
+                    {t.adminImagesUploadedSuccess}
                 </div>
             )}
 
@@ -250,13 +252,13 @@ export default function ImageUploader({
                             className="px-6 py-3 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-700 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors flex items-center gap-2"
                         >
                             <ImageIcon className="w-5 h-5" />
-                            {uploading ? 'Subiendo...' : `Subir ${images.length} imagen${images.length > 1 ? 'es' : ''}`}
+                            {uploading ? t.adminUploadingImages + '...' : `${t.adminUploadImages} ${images.length} image${images.length > 1 ? 's' : ''}`}
                         </button>
 
                         {uploading && (
                             <div className="flex-1 space-y-2">
                                 <div className="flex items-center justify-between text-sm text-gray-400">
-                                    <span>Subiendo {currentFile} de {totalFiles}</span>
+                                    <span>{t.adminUploadProgress} {currentFile} of {totalFiles}</span>
                                     <span>{Math.round(progress)}%</span>
                                 </div>
                                 <div className="h-2 bg-gray-700 rounded-full overflow-hidden">
@@ -266,7 +268,7 @@ export default function ImageUploader({
                                     />
                                 </div>
                                 <p className="text-xs text-gray-500">
-                                    Optimizando y generando blur placeholders...
+                                    {t.adminOptimizingImages}
                                 </p>
                             </div>
                         )}

@@ -13,35 +13,65 @@ const bricolageGrotesque = Bricolage_Grotesque({
 
 export const metadata: Metadata = {
     title: {
-        default: 'Katerina Voronina - Digital Artisan Portfolio',
+        default: 'Katerina Voronina - UX/UI Designer & Digital Artisan',
         template: '%s | Katerina Voronina',
     },
     description:
-        'Portfolio of Katerina Voronina - Digital designer crafting human interfaces and artistic drawings with silence & substance.',
-    keywords: ['portfolio', 'design', 'UI/UX', 'digital art', 'interface design', 'drawing'],
+        'Professional UX/UI designer crafting human-centered digital interfaces. Portfolio showcasing interface design, user experience, and artistic exploration. Available for design opportunities.',
+    keywords: [
+        'UX designer',
+        'UI designer',
+        'UX/UI designer',
+        'user experience designer',
+        'interface designer',
+        'digital designer',
+        'product designer',
+        'interaction design',
+        'user interface design',
+        'human-centered design',
+        'portfolio',
+        'design portfolio',
+        'Katerina Voronina',
+    ],
     authors: [{ name: 'Katerina Voronina' }],
     creator: 'Katerina Voronina',
+    metadataBase: new URL('https://katerinavoronina.com'),
+    alternates: {
+        canonical: '/',
+    },
     openGraph: {
         type: 'website',
         locale: 'en_US',
         url: 'https://katerinavoronina.com',
-        title: 'Katerina Voronina - Digital Artisan Portfolio',
-        description: 'Crafting digital silence & substance through interface design and artistic drawings.',
+        title: 'Katerina Voronina - UX/UI Designer & Digital Artisan',
+        description: 'Professional UX/UI designer crafting human-centered digital interfaces. Available for design opportunities.',
         siteName: 'Katerina Voronina Portfolio',
         images: [
             {
                 url: '/kv-logo.png',
                 width: 1200,
                 height: 1200,
-                alt: 'Katerina Voronina Monogram',
+                alt: 'Katerina Voronina - UX/UI Designer',
             },
         ],
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'Katerina Voronina - Digital Artisan Portfolio',
-        description: 'Crafting digital silence & substance through interface design and artistic drawings.',
+        title: 'Katerina Voronina - UX/UI Designer & Digital Artisan',
+        description: 'Professional UX/UI designer crafting human-centered digital interfaces.',
         images: ['/kv-logo.png'],
+        creator: '@voronina8761',
+    },
+    robots: {
+        index: true,
+        follow: true,
+        googleBot: {
+            index: true,
+            follow: true,
+            'max-video-preview': -1,
+            'max-image-preview': 'large',
+            'max-snippet': -1,
+        },
     },
     icons: {
         icon: '/kv-logo.png',

@@ -108,8 +108,8 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             </Link>
 
             {/* Project Header */}
-            <div className="mb-16 max-w-4xl">
-                <div className="flex items-baseline gap-4 mb-6">
+            <div className="mb-10 max-w-4xl">
+                <div className="flex items-baseline gap-4 mb-4">
                     <span className="font-sans text-xs tracking-[0.2em] text-indigo-200/60 uppercase">
                         {project.category === 'designing' ? 'Interface Design' : 'Artistic Drawing'}
                     </span>
@@ -117,14 +117,19 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                     <span className="font-serif text-lg text-white/30 italic">{project.year}</span>
                 </div>
 
-                <h1 className="font-serif text-5xl md:text-7xl text-platinum mb-8">{project.title}</h1>
+                <h1 
+                    className="font-serif text-5xl md:text-7xl text-platinum mb-4" 
+                    style={{ lineHeight: '0.95', display: 'block' }}
+                >
+                    {project.title}
+                </h1>
 
                 {project.description && (
-                    <p className="font-sans text-xl text-white/60 leading-relaxed">{project.description}</p>
+                    <p className="font-sans text-xl text-white/60 leading-normal">{project.description}</p>
                 )}
 
                 {project.tags && (
-                    <div className="flex flex-wrap gap-3 mt-8">
+                    <div className="flex flex-wrap gap-3 mt-4">
                         {project.tags.map((tag) => (
                             <span
                                 key={tag}
@@ -139,7 +144,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
             {/* Hero Image */}
             {galleryImages.length > 0 && (
-                <div className="mb-16 relative overflow-hidden rounded-sm">
+                <div className="mb-10 relative overflow-hidden rounded-sm">
                     <OptimizedImage
                         src={galleryImages[0].url}
                         alt={galleryImages[0].alt}
@@ -153,7 +158,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             )}
 
             {/* Project Details */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-20 pb-20 border-b border-white/10">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 pb-12 border-b border-white/10">
                 <div>
                     <h3 className="font-sans text-xs tracking-[0.2em] uppercase text-white/40 mb-3">Category</h3>
                     <p className="font-serif text-xl text-platinum">
@@ -175,7 +180,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             {/* Gallery Section */}
             {galleryImages.length > 0 && (
                 <div>
-                    <h2 className="font-serif text-3xl md:text-4xl text-platinum mb-12 italic">Gallery</h2>
+                    <h2 className="font-serif text-3xl md:text-4xl text-platinum mb-8 italic">Gallery</h2>
                     <ProjectGallery images={galleryImages} />
                 </div>
             )}

@@ -1,14 +1,13 @@
 'use client';
 
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useMemo } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { Container } from '@/components/ui/Container';
 import { ProjectGrid } from '@/components/projects/ProjectGrid';
 import { SPRING_TRANSITION } from '@/lib/data/projects';
-import { useFeaturedProjects, useProjectsByCategory } from '@/lib/supabase/hooks';
-import type { ProjectWithImages } from '@/lib/supabase/queries';
+import { useProjectsByCategory } from '@/lib/supabase/hooks';
 import { ContactCallToAction } from '@/components/ui/ContactCallToAction';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 
@@ -19,7 +18,7 @@ function SectionHeader({ title, number }: { title: string; number: string }) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 1.2, ease: [0.33, 1, 0.68, 1] }}
-            className="flex items-baseline gap-4 mb-24 md:mb-32 border-b border-white/10 pb-6"
+            className="flex items-baseline gap-4 mb-16 md:mb-20 border-b border-white/10 pb-4"
         >
             <motion.span 
                 className="font-sans text-xs md:text-sm text-white/30 tracking-widest"
@@ -62,31 +61,24 @@ export default function HomePage() {
 
     // Get featured projects from Supabase
     const { projects: designingProjects } = useProjectsByCategory('designing');
-    const { projects: drawingsProjects } = useProjectsByCategory('drawings');
 
     // Mostrar todos los proyectos de designing (ordenados priorizando destacados y order_index)
-    const featuredInterfaces = [...designingProjects].sort((a, b) => {
-        // Priorizar proyectos destacados
-        if (a.featured && !b.featured) return -1;
-        if (!a.featured && b.featured) return 1;
-        // Luego por order_index
-        return (a.order_index || 0) - (b.order_index || 0);
-    });
-    
-    // Mantener solo dos proyectos de drawings como antes
-    const featuredDrawings = [...drawingsProjects].sort((a, b) => {
-        // Priorizar proyectos destacados
-        if (a.featured && !b.featured) return -1;
-        if (!a.featured && b.featured) return 1;
-        // Luego por order_index
-        return (a.order_index || 0) - (b.order_index || 0);
-    }).slice(0, 2);
+    // Use useMemo to prevent unnecessary re-sorts on every render
+    const featuredInterfaces = useMemo(() => {
+        return [...designingProjects].sort((a, b) => {
+            // Priorizar proyectos destacados
+            if (a.featured && !b.featured) return -1;
+            if (!a.featured && b.featured) return 1;
+            // Luego por order_index
+            return (a.order_index || 0) - (b.order_index || 0);
+        });
+    }, [designingProjects]);
 
     return (
         <div ref={containerRef}>
             <Container className="pt-40 md:pt-60">
                 {/* Hero Introduction */}
-                <motion.section style={{ y: heroY, opacity: heroOpacity }} className="mb-40 md:mb-60 max-w-4xl">
+                <motion.section style={{ y: heroY, opacity: heroOpacity }} className="mb-[12rem] md:mb-[18rem] max-w-4xl">
                     <motion.p
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -113,13 +105,13 @@ export default function HomePage() {
                 </motion.section>
 
                 {/* Section 1: Designing Human Interfaces */}
-                <section id="interfaces" className="mb-40 md:mb-60">
+                <section id="interfaces" className="mb-[12rem] md:mb-[18rem]">
                     <SectionHeader number="01" title={t.section1Title} />
                     <ProjectGrid projects={featuredInterfaces} variant="interface" />
 
                     {/* See Projects Button */}
                     <motion.div 
-                        className="flex justify-center mt-20"
+                        className="flex justify-center mt-24"
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
@@ -132,42 +124,6 @@ export default function HomePage() {
                         >
                             <Link
                                 href="/designing"
-                                className="inline-flex items-center gap-3 px-8 py-3 border border-white/20 rounded-full hover:bg-white/5 hover:border-white/40 transition-all duration-500"
-                            >
-                                <span className="font-sans text-xs tracking-[0.2em] uppercase text-white/70">
-                                    {t.seeProjects}
-                                </span>
-                                <motion.div
-                                    whileHover={{ x: 4 }}
-                                    transition={{ duration: 0.4, ease: [0.33, 1, 0.68, 1] }}
-                                >
-                                    <ArrowRight size={14} className="text-white/70" />
-                                </motion.div>
-                            </Link>
-                        </motion.div>
-                    </motion.div>
-                </section>
-
-                {/* Section 2: Drawings */}
-                <section id="drawings" className="mb-40 md:mb-60">
-                    <SectionHeader number="02" title={t.section2Title} />
-                    <ProjectGrid projects={featuredDrawings} variant="drawing" />
-
-                    {/* See Projects Button */}
-                    <motion.div 
-                        className="flex justify-center mt-20"
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 1, ease: [0.33, 1, 0.68, 1] }}
-                    >
-                        <motion.div 
-                            whileHover={{ scale: 1.02 }} 
-                            whileTap={{ scale: 0.98 }}
-                            transition={{ duration: 0.4, ease: [0.33, 1, 0.68, 1] }}
-                        >
-                            <Link
-                                href="/drawings"
                                 className="inline-flex items-center gap-3 px-8 py-3 border border-white/20 rounded-full hover:bg-white/5 hover:border-white/40 transition-all duration-500"
                             >
                                 <span className="font-sans text-xs tracking-[0.2em] uppercase text-white/70">
