@@ -20,7 +20,7 @@ export function Header() {
                     Katerina Voronina
                 </h1>
                 <span className="text-xs uppercase tracking-[0.2em] text-white/40 mt-1 font-sans">
-                    Portfolio &apos;25
+                    Portfolio &apos;{new Date().getFullYear().toString().slice(-2)}
                 </span>
             </Link>
 
