@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Instagram, X, Mail, Linkedin } from 'lucide-react';
+import { Instagram, Mail, Linkedin } from 'lucide-react';
+// X icon imported but not currently used (commented out per user request)
+// import { X } from 'lucide-react';
 import Link from 'next/link';
 
 export function MobileMenu() {
@@ -22,7 +24,8 @@ export function MobileMenu() {
     const socialLinks = [
         { icon: Linkedin, href: 'https://www.linkedin.com/in/katerina-voronina-308629a6/', label: 'LinkedIn' },
         { icon: Instagram, href: 'https://www.instagram.com/katerina.voronina.art', label: 'Instagram' },
-        { icon: X, href: 'https://x.com/voronina8761', label: 'X' },
+        // REMOVED: X (Twitter) - per user request
+        // { icon: X, href: 'https://x.com/voronina8761', label: 'X' },
         { icon: Mail, href: 'mailto:ekater.voronina@gmail.com', label: 'Email' },
     ];
 

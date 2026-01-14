@@ -13,7 +13,8 @@ const bricolageGrotesque = Bricolage_Grotesque({
 
 export const metadata: Metadata = {
     title: {
-        default: 'Katerina Voronina - UX/UI Designer & Digital Artisan',
+        // UPDATED: Changed from "Digital Artisan" to "Product Strategist"
+        default: 'Katerina Voronina - UX/UI Designer & Product Strategist',
         template: '%s | Katerina Voronina',
     },
     description:
@@ -43,7 +44,8 @@ export const metadata: Metadata = {
         type: 'website',
         locale: 'en_US',
         url: 'https://katerinavoronina.com',
-        title: 'Katerina Voronina - UX/UI Designer & Digital Artisan',
+        // UPDATED: Changed from "Digital Artisan" to "Product Strategist"
+        title: 'Katerina Voronina - UX/UI Designer & Product Strategist',
         description: 'Professional UX/UI designer crafting human-centered digital interfaces. Available for design opportunities.',
         siteName: 'Katerina Voronina Portfolio',
         images: [
@@ -57,7 +59,8 @@ export const metadata: Metadata = {
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'Katerina Voronina - UX/UI Designer & Digital Artisan',
+        // UPDATED: Changed from "Digital Artisan" to "Product Strategist"
+        title: 'Katerina Voronina - UX/UI Designer & Product Strategist',
         description: 'Professional UX/UI designer crafting human-centered digital interfaces.',
         images: ['/kv-logo.png'],
         creator: '@voronina8761',

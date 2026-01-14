@@ -26,16 +26,7 @@ export function ContactCallToAction() {
                     <div className="absolute bottom-0 left-0 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
                     
                     <div className="relative z-10 text-center max-w-3xl mx-auto">
-                        {/* Badge */}
-                        <motion.p
-                            initial={{ opacity: 0, y: 10 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: 0.2, duration: 0.8, ease: [0.33, 1, 0.68, 1] }}
-                            className="font-sans text-sm tracking-[0.3em] uppercase text-white/40 mb-8"
-                        >
-                            {t.ctaBadge}
-                        </motion.p>
+                        {/* Badge removed per user request */}
 
                         {/* Title */}
                         <motion.h2

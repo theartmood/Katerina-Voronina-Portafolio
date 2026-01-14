@@ -3,7 +3,7 @@ export type Language = 'en' | 'es' | 'ru';
 export interface Translations {
     // Header
     portfolioYear: string;
-    
+
     // Home Page
     heroSubtitle: string;
     heroTitle1: string;
@@ -12,23 +12,23 @@ export interface Translations {
     section1Title: string;
     section2Title: string;
     seeProjects: string;
-    
+
     // Designing Page
     designingSubtitle: string;
     designingTitle: string;
     designingDescription: string;
-    
+
     // Drawings Page
     drawingsSubtitle: string;
     drawingsTitle: string;
     drawingsDescription: string;
-    
+
     // Contact CTA
     ctaBadge: string;
     ctaTitle: string;
     ctaDescription: string;
     ctaButton: string;
-    
+
     // Contact Page
     contactBadge: string;
     contactTitle: string;
@@ -42,17 +42,17 @@ export interface Translations {
     successTitle: string;
     successMessage: string;
     orReachOut: string;
-    
+
     // Footer
     footerCopyright: string;
     footerCredit: string;
-    
+
     // Projects
     caseStudy: string;
     viewProject: string;
     noProjects: string;
     gallery: string;
-    
+
     // Admin - Login
     adminLoginTitle: string;
     adminLoginSubtitle: string;
@@ -61,7 +61,7 @@ export interface Translations {
     adminLoginButton: string;
     adminLoggingIn: string;
     adminLoginError: string;
-    
+
     // Admin - Dashboard
     adminTitle: string;
     adminSubtitle: string;
@@ -74,7 +74,7 @@ export interface Translations {
     adminViewSite: string;
     adminDevNotice: string;
     adminLogout: string;
-    
+
     // Admin - Project List
     adminTitleColumn: string;
     adminCategoryColumn: string;
@@ -90,7 +90,7 @@ export interface Translations {
     adminCreateFirst: string;
     adminDeleteConfirm: string;
     adminDeleteError: string;
-    
+
     // Admin - Project Form
     adminBackToPanel: string;
     adminEditProject: string;
@@ -118,7 +118,7 @@ export interface Translations {
     adminFormCreate: string;
     adminFormCancel: string;
     adminFormError: string;
-    
+
     // Admin - Project List (New)
     adminDesigningProjects: string;
     adminDrawingsProjects: string;
@@ -130,7 +130,7 @@ export interface Translations {
     adminOrderLabel: string;
     adminOrderValue: string;
     adminProjectsCount: string;
-    
+
     // Admin - Project Form (New)
     adminExistingImages: string;
     adminAddNewImages: string;
@@ -146,7 +146,7 @@ export interface Translations {
     adminInvalidImages: string;
     adminNoImages: string;
     adminDragHint: string;
-        
+
         // Admin - Image Uploader
         adminDragImagesHere: string;
         adminClickToSelect: string;
@@ -172,28 +172,30 @@ const getYearSuffix = (): string => {
 export const translations: Record<Language, Translations> = {
     en: {
         portfolioYear: `Portfolio '${getYearSuffix()}`,
-        
-        heroSubtitle: 'Digital Artisan',
-        heroTitle1: 'Crafting digital',
-        heroTitle2: 'silence',
-        heroTitle3: '& substance.',
+
+        // UPDATED: Changed from "Digital Artisan" to "UX/UI Designer & Product Strategist"
+        heroSubtitle: 'UX/UI Designer & Product Strategist',
+        // UPDATED: Changed from "Crafting digital silence & substance" to "Clarity in Digital Design"
+        heroTitle1: 'Clarity in',
+        heroTitle2: 'Digital',
+        heroTitle3: 'Design.',
         section1Title: 'Designing Human Interfaces',
         section2Title: 'Drawings',
         seeProjects: 'See Projects',
-        
+
         designingSubtitle: 'Interface Design',
         designingTitle: 'Designing Human Interfaces',
         designingDescription: 'Creating digital experiences that balance functionality with aesthetic restraint. Each interface is crafted with intention, focusing on clarity, elegance, and human connection.',
-        
+
         drawingsSubtitle: 'Artistic Exploration',
         drawingsTitle: 'Drawings',
         drawingsDescription: 'A collection of artistic explorations across various mediums. Each piece represents a moment of creative expression, capturing emotion, texture, and form.',
-        
-        ctaBadge: "Let's Collaborate",
-        ctaTitle: "Let's Create Excellence",
+
+        ctaBadge: "Let's Collaborate", // Badge removed from UI but kept for reference
+        ctaTitle: "Let's Collaborate",
         ctaDescription: 'Transform your vision into reality with premium design solutions.',
         ctaButton: 'Get in Touch',
-        
+
         contactBadge: "Let's Connect",
         contactTitle: 'Start a Conversation',
         contactDescription: "Have a project in mind? Let's discuss how we can create something extraordinary together.",
@@ -206,15 +208,15 @@ export const translations: Record<Language, Translations> = {
         successTitle: 'Message Sent!',
         successMessage: "I'll get back to you shortly",
         orReachOut: 'Or reach out directly',
-        
+
         footerCopyright: `© ${new Date().getFullYear()} Katerina Voronina`,
         footerCredit: 'BY ALIA STUDIO',
-        
+
         caseStudy: 'Case Study',
         viewProject: 'View Project',
         noProjects: 'No projects yet. Add some from the admin panel!',
         gallery: 'Gallery',
-        
+
         adminLoginTitle: 'Admin Access',
         adminLoginSubtitle: 'Enter your credentials to continue',
         adminUsername: 'Username',
@@ -222,7 +224,7 @@ export const translations: Record<Language, Translations> = {
         adminLoginButton: 'Sign In',
         adminLoggingIn: 'Signing in...',
         adminLoginError: 'Invalid credentials',
-        
+
         adminTitle: 'Admin Panel',
         adminSubtitle: 'Manage your portfolio',
         adminNewProject: 'New Project',
@@ -234,7 +236,7 @@ export const translations: Record<Language, Translations> = {
         adminViewSite: 'View Site →',
         adminDevNotice: 'This panel is only available in development. For production, implement proper authentication.',
         adminLogout: 'Sign Out',
-        
+
         adminTitleColumn: 'Title',
         adminCategoryColumn: 'Category',
         adminYearColumn: 'Year',
@@ -249,7 +251,7 @@ export const translations: Record<Language, Translations> = {
         adminCreateFirst: 'Create first project',
         adminDeleteConfirm: 'Delete "{title}"? This action cannot be undone.',
         adminDeleteError: 'Error deleting project',
-        
+
         adminBackToPanel: '← Back to panel',
         adminEditProject: 'Edit Project',
         adminNewProjectTitle: 'New Project',
@@ -276,7 +278,7 @@ export const translations: Record<Language, Translations> = {
         adminFormCreate: 'Create',
         adminFormCancel: 'Cancel',
         adminFormError: 'Error saving project',
-        
+
         // Admin - Project List (New)
         adminDesigningProjects: 'Design Projects (Designing)',
         adminDrawingsProjects: 'Drawing Projects (Drawings)',
@@ -288,7 +290,7 @@ export const translations: Record<Language, Translations> = {
         adminOrderLabel: 'Order',
         adminOrderValue: 'order',
         adminProjectsCount: 'project',
-        
+
         // Admin - Project Form (New)
         adminExistingImages: 'Existing Images',
         adminAddNewImages: 'Add New Images',
@@ -304,7 +306,7 @@ export const translations: Record<Language, Translations> = {
         adminImagesPending: 'image(s) ready',
         adminImagesAutoUpload: 'Will be uploaded automatically when creating the project.',
         adminAddImagesLater: '💡 You can add images now or after creating the project',
-        
+
         // Admin - Image Uploader
         adminDragImagesHere: 'Drag images here or click to select',
         adminClickToSelect: 'click to select',
@@ -318,28 +320,30 @@ export const translations: Record<Language, Translations> = {
     },
     es: {
         portfolioYear: `Portafolio '${getYearSuffix()}`,
-        
-        heroSubtitle: 'Artesana Digital',
-        heroTitle1: 'Creando',
-        heroTitle2: 'silencio',
-        heroTitle3: 'y sustancia digital.',
+
+        // UPDATED: Changed from "Artesana Digital" to "Diseñadora UX/UI & Estratega de Producto"
+        heroSubtitle: 'Diseñadora UX/UI & Estratega de Producto',
+        // UPDATED: Changed to "Claridad en el Diseño Digital"
+        heroTitle1: 'Claridad en el',
+        heroTitle2: 'Diseño',
+        heroTitle3: 'Digital.',
         section1Title: 'Diseñando Interfaces Humanas',
         section2Title: 'Dibujos',
         seeProjects: 'Ver Proyectos',
-        
+
         designingSubtitle: 'Diseño de Interfaces',
         designingTitle: 'Diseñando Interfaces Humanas',
         designingDescription: 'Creando experiencias digitales que equilibran funcionalidad con restricción estética. Cada interfaz se elabora con intención, enfocándose en claridad, elegancia y conexión humana.',
-        
+
         drawingsSubtitle: 'Exploración Artística',
         drawingsTitle: 'Dibujos',
         drawingsDescription: 'Una colección de exploraciones artísticas a través de varios medios. Cada pieza representa un momento de expresión creativa, capturando emoción, textura y forma.',
-        
-        ctaBadge: 'Colaboremos',
-        ctaTitle: 'Creemos Excelencia',
+
+        ctaBadge: 'Colaboremos', // Badge removed from UI but kept for reference
+        ctaTitle: 'Colaboremos',
         ctaDescription: 'Transforma tu visión en realidad con soluciones de diseño premium.',
         ctaButton: 'Contactar',
-        
+
         contactBadge: 'Conectemos',
         contactTitle: 'Iniciemos una Conversación',
         contactDescription: '¿Tienes un proyecto en mente? Discutamos cómo podemos crear algo extraordinario juntos.',
@@ -352,15 +356,15 @@ export const translations: Record<Language, Translations> = {
         successTitle: '¡Mensaje Enviado!',
         successMessage: 'Te responderé pronto',
         orReachOut: 'O contáctame directamente',
-        
+
         footerCopyright: `© ${new Date().getFullYear()} Katerina Voronina`,
         footerCredit: 'POR ALIA STUDIO',
-        
+
         caseStudy: 'Caso de Estudio',
         viewProject: 'Ver Proyecto',
         noProjects: '¡Aún no hay proyectos. Agrega algunos desde el panel de administración!',
         gallery: 'Galería',
-        
+
         adminLoginTitle: 'Acceso Admin',
         adminLoginSubtitle: 'Ingresa tus credenciales para continuar',
         adminUsername: 'Usuario',
@@ -368,7 +372,7 @@ export const translations: Record<Language, Translations> = {
         adminLoginButton: 'Iniciar Sesión',
         adminLoggingIn: 'Iniciando sesión...',
         adminLoginError: 'Credenciales inválidas',
-        
+
         adminTitle: 'Panel de Administración',
         adminSubtitle: 'Gestiona tu portafolio',
         adminNewProject: 'Nuevo Proyecto',
@@ -380,7 +384,7 @@ export const translations: Record<Language, Translations> = {
         adminViewSite: 'Ver Sitio →',
         adminDevNotice: 'Este panel solo está disponible en desarrollo. Para producción, implementa autenticación adecuada.',
         adminLogout: 'Cerrar Sesión',
-        
+
         adminTitleColumn: 'Título',
         adminCategoryColumn: 'Categoría',
         adminYearColumn: 'Año',
@@ -395,7 +399,7 @@ export const translations: Record<Language, Translations> = {
         adminCreateFirst: 'Crear primer proyecto',
         adminDeleteConfirm: '¿Eliminar "{title}"? Esta acción no se puede deshacer.',
         adminDeleteError: 'Error al eliminar proyecto',
-        
+
         adminBackToPanel: '← Volver al panel',
         adminEditProject: 'Editar Proyecto',
         adminNewProjectTitle: 'Nuevo Proyecto',
@@ -422,7 +426,7 @@ export const translations: Record<Language, Translations> = {
         adminFormCreate: 'Crear',
         adminFormCancel: 'Cancelar',
         adminFormError: 'Error al guardar proyecto',
-        
+
         // Admin - Project List (New)
         adminDesigningProjects: 'Proyectos de Diseño (Designing)',
         adminDrawingsProjects: 'Proyectos de Dibujos (Drawings)',
@@ -434,7 +438,7 @@ export const translations: Record<Language, Translations> = {
         adminOrderLabel: 'Orden',
         adminOrderValue: 'orden',
         adminProjectsCount: 'proyecto',
-        
+
         // Admin - Project Form (New)
         adminExistingImages: 'Imágenes Existentes',
         adminAddNewImages: 'Agregar Nuevas Imágenes',
@@ -450,7 +454,7 @@ export const translations: Record<Language, Translations> = {
         adminImagesPending: 'imagen(es) lista(s)',
         adminImagesAutoUpload: 'Se subirá(n) automáticamente al crear el proyecto.',
         adminAddImagesLater: '💡 Puedes agregar imágenes ahora o después de crear el proyecto',
-        
+
         // Admin - Image Uploader
         adminDragImagesHere: 'Arrastra imágenes aquí o haz clic para seleccionar',
         adminClickToSelect: 'haz clic para seleccionar',
@@ -464,28 +468,30 @@ export const translations: Record<Language, Translations> = {
     },
     ru: {
         portfolioYear: `Портфолио '${getYearSuffix()}`,
-        
-        heroSubtitle: 'Цифровой Мастер',
-        heroTitle1: 'Создавая цифровую',
-        heroTitle2: 'тишину',
-        heroTitle3: 'и сущность.',
+
+        // UPDATED: Changed from "Цифровой Мастер" to "UX/UI Дизайнер & Продуктовый Стратег"
+        heroSubtitle: 'UX/UI Дизайнер & Продуктовый Стратег',
+        // UPDATED: Changed to "Ясность в Цифровом Дизайне"
+        heroTitle1: 'Ясность в',
+        heroTitle2: 'Цифровом',
+        heroTitle3: 'Дизайне.',
         section1Title: 'Дизайн Человеческих Интерфейсов',
         section2Title: 'Рисунки',
         seeProjects: 'Смотреть Проекты',
-        
+
         designingSubtitle: 'Дизайн Интерфейсов',
         designingTitle: 'Дизайн Человеческих Интерфейсов',
         designingDescription: 'Создание цифровых впечатлений, балансирующих функциональность с эстетической сдержанностью. Каждый интерфейс создан с намерением, фокусируясь на ясности, элегантности и человеческой связи.',
-        
+
         drawingsSubtitle: 'Художественное Исследование',
         drawingsTitle: 'Рисунки',
         drawingsDescription: 'Коллекция художественных исследований в различных техниках. Каждая работа представляет момент творческого самовыражения, захватывая эмоции, текстуру и форму.',
-        
-        ctaBadge: 'Давайте Сотрудничать',
-        ctaTitle: 'Создадим Совершенство',
+
+        ctaBadge: 'Давайте Сотрудничать', // Badge removed from UI but kept for reference
+        ctaTitle: 'Давайте Сотрудничать',
         ctaDescription: 'Превратите ваше видение в реальность с премиальными дизайн-решениями.',
         ctaButton: 'Связаться',
-        
+
         contactBadge: 'Давайте Свяжемся',
         contactTitle: 'Начнем Разговор',
         contactDescription: 'Есть проект в голове? Давайте обсудим, как мы можем создать что-то экстраординарное вместе.',
@@ -498,15 +504,15 @@ export const translations: Record<Language, Translations> = {
         successTitle: 'Сообщение Отправлено!',
         successMessage: 'Я свяжусь с вами в ближайшее время',
         orReachOut: 'Или свяжитесь напрямую',
-        
+
         footerCopyright: '© 2025 Катерина Воронина',
         footerCredit: 'ОТ ALIA STUDIO',
-        
+
         caseStudy: 'Кейс',
         viewProject: 'Посмотреть Проект',
         noProjects: 'Пока нет проектов. Добавьте их из панели администратора!',
         gallery: 'Галерея',
-        
+
         adminLoginTitle: 'Доступ Администратора',
         adminLoginSubtitle: 'Введите учетные данные для продолжения',
         adminUsername: 'Имя пользователя',
@@ -514,7 +520,7 @@ export const translations: Record<Language, Translations> = {
         adminLoginButton: 'Войти',
         adminLoggingIn: 'Вход...',
         adminLoginError: 'Неверные учетные данные',
-        
+
         adminTitle: 'Панель Администратора',
         adminSubtitle: 'Управление портфолио',
         adminNewProject: 'Новый Проект',
@@ -526,7 +532,7 @@ export const translations: Record<Language, Translations> = {
         adminViewSite: 'Смотреть Сайт →',
         adminDevNotice: 'Эта панель доступна только в разработке. Для продакшена реализуйте надлежащую аутентификацию.',
         adminLogout: 'Выйти',
-        
+
         adminTitleColumn: 'Название',
         adminCategoryColumn: 'Категория',
         adminYearColumn: 'Год',
@@ -541,7 +547,7 @@ export const translations: Record<Language, Translations> = {
         adminCreateFirst: 'Создать первый проект',
         adminDeleteConfirm: 'Удалить "{title}"? Это действие нельзя отменить.',
         adminDeleteError: 'Ошибка удаления проекта',
-        
+
         adminBackToPanel: '← Назад к панели',
         adminEditProject: 'Редактировать Проект',
         adminNewProjectTitle: 'Новый Проект',
@@ -568,7 +574,7 @@ export const translations: Record<Language, Translations> = {
         adminFormCreate: 'Создать',
         adminFormCancel: 'Отмена',
         adminFormError: 'Ошибка сохранения проекта',
-        
+
         // Admin - Project List (New)
         adminDesigningProjects: 'Проекты Дизайна (Designing)',
         adminDrawingsProjects: 'Проекты Рисунков (Drawings)',
@@ -580,7 +586,7 @@ export const translations: Record<Language, Translations> = {
         adminOrderLabel: 'Порядок',
         adminOrderValue: 'порядок',
         adminProjectsCount: 'проект',
-        
+
         // Admin - Project Form (New)
         adminExistingImages: 'Существующие Изображения',
         adminAddNewImages: 'Добавить Новые Изображения',
@@ -596,7 +602,7 @@ export const translations: Record<Language, Translations> = {
         adminImagesPending: 'изображение(я) готово(ы)',
         adminImagesAutoUpload: 'Будет загружено автоматически при создании проекта.',
         adminAddImagesLater: '💡 Вы можете добавить изображения сейчас или после создания проекта',
-        
+
         // Admin - Image Uploader
         adminDragImagesHere: 'Перетащите изображения сюда или нажмите, чтобы выбрать',
         adminClickToSelect: 'нажмите, чтобы выбрать',
@@ -609,4 +615,3 @@ export const translations: Record<Language, Translations> = {
         adminOptimizingImages: 'Оптимизация и создание blur placeholders...',
     },
 };
-

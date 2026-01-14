@@ -1,21 +1,18 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Save, Loader2 } from 'lucide-react';
 import ImageUploader from './ImageUploader';
-import { ImageManager } from './ImageManager';
-import { uploadImages, deleteProjectImage } from '@/lib/supabase/storage';
-import { createProject, updateProject, addProjectImage, updateProjectImage, type ProjectWithImages, type ProjectImage } from '@/lib/supabase/queries';
-import { useLanguage } from '@/lib/i18n/LanguageContext';
+import { uploadImages } from '@/lib/supabase/storage';
+import { createProject, updateProject, addProjectImage, type Project } from '@/lib/supabase/queries';
 
 interface ProjectFormProps {
-    project?: ProjectWithImages;
-    onSuccess?: (project: ProjectWithImages) => void;
+    project?: Project;
+    onSuccess?: (project: Project) => void;
     onCancel?: () => void;
 }
 
 export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFormProps) {
-    const { t } = useLanguage();
     const [formData, setFormData] = useState({
         title: project?.title || '',
         slug: project?.slug || '',
@@ -28,28 +25,8 @@ export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFor
         order_index: project?.order_index || 0
     });
 
-    const [pendingImages, setPendingImages] = useState<File[]>([]);
-    const [existingImages, setExistingImages] = useState<ProjectImage[]>(() => {
-        // Initialize with sorted images from project if available
-        if (project?.images && project.images.length > 0) {
-            return [...project.images].sort((a, b) => a.order_index - b.order_index);
-        }
-        return [];
-    });
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [deletingImageId, setDeletingImageId] = useState<string | null>(null);
-
-    // Update existing images when project ID changes (not the whole project object)
-    useEffect(() => {
-        if (project?.images && project.images.length > 0) {
-            const sortedImages = [...project.images].sort((a, b) => a.order_index - b.order_index);
-            setExistingImages(sortedImages);
-        } else if (!project) {
-            setExistingImages([]);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [project?.id]); // Only depend on project ID to avoid infinite loops
 
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -61,7 +38,7 @@ export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFor
             [name]: type === 'checkbox'
                 ? (e.target as HTMLInputElement).checked
                 : type === 'number'
-                    ? (value === '' ? new Date().getFullYear() : parseInt(value))
+                    ? parseInt(value)
                     : value
         }));
 
@@ -75,94 +52,29 @@ export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFor
         }
     };
 
-    const handleImageUpload = async (files: File[], onProgress?: (progress: number, current: number, total: number) => void) => {
-        if (project?.id) {
-            // Si el proyecto ya existe, subir directamente
-            const results = await uploadImages(files, formData.slug, onProgress);
-
-            // Add images to database
-            const maxOrderIndex = existingImages.length > 0 
-                ? Math.max(...existingImages.map(img => img.order_index))
-                : -1;
-
-            for (let i = 0; i < results.length; i++) {
-                const result = results[i];
-                const newImage = await addProjectImage({
-                    project_id: project.id,
-                    storage_path: result.storagePath,
-                    public_url: result.publicUrl,
-                    blur_data_url: result.blurDataUrl,
-                    alt_text: result.publicUrl.split('/').pop() || 'Project image',
-                    width: result.width,
-                    height: result.height,
-                    file_size: result.fileSize,
-                    format: result.format,
-                    is_cover: existingImages.length === 0 && i === 0, // First image is cover only if no images exist
-                    order_index: maxOrderIndex + 1 + i
-                });
-                setExistingImages(prev => [...prev, newImage].sort((a, b) => a.order_index - b.order_index));
-            }
-        } else {
-            // Si es nuevo proyecto, guardar en estado temporal
-            setPendingImages(prev => [...prev, ...files]);
-        }
-    };
-
-    const handleDeleteImage = async (imageId: string) => {
-        if (!confirm(t.adminDeleteImageConfirm)) {
-            return;
+    const handleImageUpload = async (files: File[]) => {
+        if (!project?.id) {
+            throw new Error('Guarda el proyecto primero antes de subir imágenes');
         }
 
-        setDeletingImageId(imageId);
-        try {
-            await deleteProjectImage(imageId);
-            setExistingImages(prev => prev.filter(img => img.id !== imageId));
-        } catch (err) {
-            setError(err instanceof Error ? err.message : t.adminDeleteImageError);
-        } finally {
-            setDeletingImageId(null);
-        }
-    };
+        const results = await uploadImages(files, formData.slug);
 
-    const handleSetCover = async (imageId: string) => {
-        if (!project?.id) return;
-
-        try {
-            // Unset all covers
-            await Promise.all(
-                existingImages
-                    .filter(img => img.is_cover)
-                    .map(img => updateProjectImage(img.id, { is_cover: false }))
-            );
-
-            // Set new cover
-            await updateProjectImage(imageId, { is_cover: true });
-
-            // Update local state
-            setExistingImages(prev =>
-                prev.map(img => ({
-                    ...img,
-                    is_cover: img.id === imageId
-                }))
-            );
-        } catch (err) {
-            setError(err instanceof Error ? err.message : t.adminSetCoverError);
-        }
-    };
-
-    const handleReorderImages = async (newOrder: ProjectImage[]) => {
-        if (!project?.id) return;
-
-        try {
-            // Update order_index for all images
-            await Promise.all(
-                newOrder.map((img, index) =>
-                    updateProjectImage(img.id, { order_index: index })
-                )
-            );
-            setExistingImages(newOrder);
-        } catch (err) {
-            setError(err instanceof Error ? err.message : t.adminReorderImagesError);
+        // Add images to database
+        for (let i = 0; i < results.length; i++) {
+            const result = results[i];
+            await addProjectImage({
+                project_id: project.id,
+                storage_path: result.storagePath,
+                public_url: result.publicUrl,
+                blur_data_url: result.blurDataUrl,
+                alt_text: result.publicUrl.split('/').pop() || 'Project image',
+                width: result.width,
+                height: result.height,
+                file_size: result.fileSize,
+                format: result.format,
+                is_cover: i === 0, // First image is cover
+                order_index: i
+            });
         }
     };
 
@@ -173,46 +85,19 @@ export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFor
         setError(null);
 
         try {
-            let savedProject: ProjectWithImages;
+            let savedProject: Project;
 
             if (project?.id) {
                 // Update existing project
-                const updated = await updateProject(project.id, formData);
-                savedProject = { ...updated, images: existingImages } as ProjectWithImages;
+                savedProject = await updateProject(project.id, formData);
             } else {
                 // Create new project
-                const created = await createProject(formData);
-                const newImages: ProjectImage[] = [];
-
-                // Si hay imágenes pendientes, subirlas ahora
-                if (pendingImages.length > 0) {
-                    const results = await uploadImages(pendingImages, formData.slug);
-
-                    // Add images to database
-                    for (let i = 0; i < results.length; i++) {
-                        const result = results[i];
-                        const newImage = await addProjectImage({
-                            project_id: created.id,
-                            storage_path: result.storagePath,
-                            public_url: result.publicUrl,
-                            blur_data_url: result.blurDataUrl,
-                            alt_text: `${formData.title} - Image ${i + 1}`,
-                            width: result.width,
-                            height: result.height,
-                            file_size: result.fileSize,
-                            format: result.format,
-                            is_cover: i === 0, // First image is cover
-                            order_index: i
-                        });
-                        newImages.push(newImage);
-                    }
-                }
-                savedProject = { ...created, images: newImages } as ProjectWithImages;
+                savedProject = await createProject(formData);
             }
 
             onSuccess?.(savedProject);
         } catch (err) {
-            setError(err instanceof Error ? err.message : t.adminFormError);
+            setError(err instanceof Error ? err.message : 'Error al guardar proyecto');
         } finally {
             setSaving(false);
         }
@@ -231,7 +116,7 @@ export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFor
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">
-                        {t.adminFormTitle}
+                        Título *
                     </label>
                     <input
                         type="text"
@@ -240,13 +125,13 @@ export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFor
                         onChange={handleChange}
                         required
                         className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none"
-                        placeholder="Project name"
+                        placeholder="Nombre del proyecto"
                     />
                 </div>
 
                 <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">
-                        {t.adminFormSlug}
+                        Slug *
                     </label>
                     <input
                         type="text"
@@ -256,7 +141,7 @@ export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFor
                         required
                         disabled={!!project}
                         className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none disabled:opacity-50"
-                        placeholder="url-friendly"
+                        placeholder="url-amigable"
                     />
                 </div>
             </div>
@@ -264,7 +149,7 @@ export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFor
             {/* Description */}
             <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
-                    {t.adminFormDescription}
+                    Descripción
                 </label>
                 <textarea
                     name="description"
@@ -272,7 +157,7 @@ export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFor
                     onChange={handleChange}
                     rows={4}
                     className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none resize-none"
-                    placeholder="Describe the project..."
+                    placeholder="Describe el proyecto..."
                 />
             </div>
 
@@ -280,7 +165,7 @@ export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFor
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">
-                        {t.adminFormCategory}
+                        Categoría *
                     </label>
                     <select
                         name="category"
@@ -289,20 +174,20 @@ export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFor
                         required
                         className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none"
                     >
-                        <option value="designing">{t.adminFormCategoryDesigning} (UX/UI)</option>
-                        <option value="drawings">{t.adminFormCategoryDrawings} (Art)</option>
+                        <option value="designing">Designing (UX/UI)</option>
+                        <option value="drawings">Drawings (Art)</option>
                         <option value="all">All Categories</option>
                     </select>
                 </div>
 
                 <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">
-                        {t.adminFormYear}
+                        Año *
                     </label>
                     <input
                         type="number"
                         name="year"
-                        value={formData.year || new Date().getFullYear()}
+                        value={formData.year}
                         onChange={handleChange}
                         required
                         min="2000"
@@ -313,7 +198,7 @@ export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFor
 
                 <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">
-                        {t.adminFormClient}
+                        Cliente
                     </label>
                     <input
                         type="text"
@@ -321,7 +206,7 @@ export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFor
                         value={formData.client}
                         onChange={handleChange}
                         className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none"
-                        placeholder="Client name"
+                        placeholder="Nombre del cliente"
                     />
                 </div>
             </div>
@@ -338,18 +223,18 @@ export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFor
                         className="w-5 h-5 bg-gray-800 border-gray-700 rounded text-purple-600 focus:ring-purple-500"
                     />
                     <label htmlFor="featured" className="text-sm font-medium text-gray-300">
-                        {t.adminFormFeatured}
+                        Proyecto destacado
                     </label>
                 </div>
 
                 <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">
-                        {t.adminFormOrder}
+                        Orden
                     </label>
                     <input
                         type="number"
                         name="order_index"
-                        value={formData.order_index || 0}
+                        value={formData.order_index}
                         onChange={handleChange}
                         min="0"
                         className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none"
@@ -357,42 +242,13 @@ export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFor
                 </div>
             </div>
 
-            {/* Existing Images */}
-            {project && (
+            {/* Image Upload (only for existing projects) */}
+            {project?.id && (
                 <div>
-                    <h3 className="text-lg font-semibold text-white mb-4">
-                        {t.adminExistingImages || 'Project Images'} ({existingImages.length})
-                    </h3>
-                    <ImageManager
-                        images={existingImages}
-                        onReorder={handleReorderImages}
-                        onSetCover={handleSetCover}
-                        onDelete={handleDeleteImage}
-                        deletingImageId={deletingImageId}
-                        t={t}
-                    />
+                    <h3 className="text-lg font-semibold text-white mb-4">Imágenes</h3>
+                    <ImageUploader onUpload={handleImageUpload} />
                 </div>
             )}
-
-            {/* Image Upload - Always visible */}
-            <div>
-                <h3 className="text-lg font-semibold text-white mb-4">
-                    {project ? t.adminAddNewImages : t.adminFormImages} {!project && pendingImages.length > 0 && (
-                        <span className="text-sm text-purple-400 ml-2">
-                            ({pendingImages.length} {t.adminFormPending})
-                        </span>
-                    )}
-                </h3>
-                <ImageUploader onUpload={handleImageUpload} />
-                {!project && pendingImages.length > 0 && (
-                    <div className="mt-4 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
-                        <p className="text-sm text-blue-400">
-                            ✓ {pendingImages.length} {t.adminImagesPending}. 
-                            {t.adminImagesAutoUpload}
-                        </p>
-                    </div>
-                )}
-            </div>
 
             {/* Actions */}
             <div className="flex items-center gap-4 pt-4 border-t border-gray-800">
@@ -404,12 +260,12 @@ export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFor
                     {saving ? (
                         <>
                             <Loader2 className="w-5 h-5 animate-spin" />
-                            {t.adminFormSaving}
+                            Guardando...
                         </>
                     ) : (
                         <>
                             <Save className="w-5 h-5" />
-                            {project ? t.adminFormUpdate : t.adminFormCreate} Project
+                            {project ? 'Actualizar' : 'Crear'} Proyecto
                         </>
                     )}
                 </button>
@@ -421,14 +277,14 @@ export default function ProjectForm({ project, onSuccess, onCancel }: ProjectFor
                         disabled={saving}
                         className="px-6 py-3 bg-gray-800 hover:bg-gray-700 disabled:opacity-50 text-white rounded-lg font-medium transition-colors"
                     >
-                        {t.adminFormCancel}
+                        Cancelar
                     </button>
                 )}
             </div>
 
-            {!project && pendingImages.length === 0 && (
+            {!project && (
                 <p className="text-sm text-gray-400">
-                    {t.adminAddImagesLater}
+                    * Guarda el proyecto primero para poder subir imágenes
                 </p>
             )}
         </form>
