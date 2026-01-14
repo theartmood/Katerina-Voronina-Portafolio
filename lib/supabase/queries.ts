@@ -54,7 +54,7 @@ export async function getAllProjects(): Promise<ProjectWithImages[]> {
         .from('projects')
         .select(`
             *,
-            images:project_images(*)
+            images:project_images!project_images_project_id_fkey(*)
         `)
         .eq('published', true)
         .order('order_index');
@@ -79,7 +79,7 @@ export async function getProjectBySlug(slug: string): Promise<ProjectWithImages 
         .from('projects')
         .select(`
             *,
-            images:project_images(*)
+            images:project_images!project_images_project_id_fkey(*)
         `)
         .eq('slug', slug)
         .single();
@@ -105,7 +105,7 @@ export async function getProjectById(id: string): Promise<ProjectWithImages | nu
         .from('projects')
         .select(`
             *,
-            images:project_images(*)
+            images:project_images!project_images_project_id_fkey(*)
         `)
         .eq('id', id)
         .single();
@@ -131,7 +131,7 @@ export async function getFeaturedProjects(): Promise<ProjectWithImages[]> {
         .from('projects')
         .select(`
             *,
-            images:project_images(*)
+            images:project_images!project_images_project_id_fkey(*)
         `)
         .eq('featured', true)
         .eq('published', true)
@@ -159,7 +159,7 @@ export async function getProjectsByCategory(
         .from('projects')
         .select(`
             *,
-            images:project_images(*)
+            images:project_images!project_images_project_id_fkey(*)
         `)
         .eq('category', category)
         .eq('published', true)

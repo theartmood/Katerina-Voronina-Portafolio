@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Container } from '@/components/ui/Container';
 import { ProjectGrid } from '@/components/projects/ProjectGrid';
-import { getProjectsByCategory } from '@/lib/supabase/queries';
+import { getProjectsByCategory } from '@/lib/supabase/server-queries';
 
 export const metadata: Metadata = {
     title: 'Projects',
