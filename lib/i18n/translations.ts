@@ -9,6 +9,7 @@ export interface Translations {
     heroTitle1: string;
     heroTitle2: string;
     heroTitle3: string;
+    heroDescription: string;
     section1Title: string;
     section2Title: string;
     seeProjects: string;
@@ -179,6 +180,7 @@ export const translations: Record<Language, Translations> = {
         heroTitle1: 'Clarity in',
         heroTitle2: 'Digital',
         heroTitle3: 'Design.',
+        heroDescription: 'Bridging the gap between complex business goals and effortless user experiences. I build clean, high-performing interfaces that prioritize clarity and functional value.',
         section1Title: 'Designing Human Interfaces',
         section2Title: 'Drawings',
         seeProjects: 'See Projects',
@@ -327,6 +329,7 @@ export const translations: Record<Language, Translations> = {
         heroTitle1: 'Claridad en el',
         heroTitle2: 'Diseño',
         heroTitle3: 'Digital.',
+        heroDescription: 'Conectando objetivos empresariales complejos con experiencias de usuario fluidas. Construyo interfaces limpias y de alto rendimiento que priorizan la claridad y el valor funcional.',
         section1Title: 'Diseñando Interfaces Humanas',
         section2Title: 'Dibujos',
         seeProjects: 'Ver Proyectos',
@@ -475,6 +478,7 @@ export const translations: Record<Language, Translations> = {
         heroTitle1: 'Ясность в',
         heroTitle2: 'Цифровом',
         heroTitle3: 'Дизайне.',
+        heroDescription: 'Соединяю сложные бизнес-цели с безупречным пользовательским опытом. Создаю чистые, высокопроизводительные интерфейсы, в которых приоритет — ясность и функциональная ценность.',
         section1Title: 'Дизайн Человеческих Интерфейсов',
         section2Title: 'Рисунки',
         seeProjects: 'Смотреть Проекты',
