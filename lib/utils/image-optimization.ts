@@ -324,4 +324,3 @@ export function normalizeSupabaseUrl(url: string | null | undefined): string | n
     
     return null;
 }
-

@@ -3,8 +3,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { Container } from '@/components/ui/Container';
-import { OptimizedImage } from '@/components/ui/OptimizedImage';
-import { ProjectGallery } from '@/components/projects/ProjectGallery';
+import { ProjectImageScroll } from '@/components/projects/ProjectImageScroll';
 import { createClient } from '@/lib/supabase/server';
 
 // Force dynamic rendering - projects come from Supabase
@@ -70,14 +69,8 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         notFound();
     }
 
-    // Get cover image and gallery images from Supabase
-    const coverImage = project.images?.find((img: any) => img.is_cover) || project.images?.[0];
-    const galleryImages = project.images?.map((img: any) => ({
-        url: img.public_url,
-        alt: img.alt_text || project.title,
-        width: img.width || 1600,
-        height: img.height || 1200,
-    })) || [];
+    // Get all images from Supabase, sorted by order_index
+    const allImages = project.images || [];
 
     // Category display name
     const categoryName = project.category === 'designing' ? 'Interface Design' : 'Drawing';
@@ -123,20 +116,6 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 )}
             </div>
 
-            {/* Hero Image */}
-            {coverImage && (
-                <div className="mb-16 relative overflow-hidden rounded-sm">
-                    <OptimizedImage
-                        src={coverImage.public_url}
-                        alt={coverImage.alt_text || project.title}
-                        width={coverImage.width || 1600}
-                        height={coverImage.height || 1200}
-                        priority
-                        className="w-full h-auto"
-                    />
-                </div>
-            )}
-
             {/* Project Details */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-20 pb-20 border-b border-white/10">
                 <div>
@@ -155,13 +134,8 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 )}
             </div>
 
-            {/* Gallery Section */}
-            {galleryImages.length > 0 && (
-                <div>
-                    <h2 className="font-serif text-3xl md:text-4xl text-platinum mb-12 italic">Gallery</h2>
-                    <ProjectGallery images={galleryImages} />
-                </div>
-            )}
+            {/* Images Scroll - All images in a continuous elegant scroll */}
+            <ProjectImageScroll images={allImages} projectTitle={project.title} />
         </Container>
     );
 }
