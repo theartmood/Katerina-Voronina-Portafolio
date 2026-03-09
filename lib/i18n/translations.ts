@@ -44,6 +44,17 @@ export interface Translations {
     successMessage: string;
     orReachOut: string;
 
+    // Navigation
+    navDesigning: string;
+    navDrawings: string;
+    navContact: string;
+    navExplore: string;
+    navConnect: string;
+    navArtPortfolio: string;
+    backToProjects: string;
+    interfaceDesign: string;
+    drawing: string;
+
     // Footer
     footerCopyright: string;
     footerCredit: string;
@@ -211,6 +222,16 @@ export const translations: Record<Language, Translations> = {
         successMessage: "I'll get back to you shortly",
         orReachOut: 'Or reach out directly',
 
+        navDesigning: 'Designing',
+        navDrawings: 'Drawings',
+        navContact: 'Contact',
+        navExplore: 'Explore',
+        navConnect: 'Connect',
+        navArtPortfolio: 'Art Portfolio',
+        backToProjects: 'Back to Projects',
+        interfaceDesign: 'Interface Design',
+        drawing: 'Drawing',
+
         footerCopyright: `© ${new Date().getFullYear()} Katerina Voronina`,
         footerCredit: 'BY ALIA STUDIO',
 
@@ -360,6 +381,16 @@ export const translations: Record<Language, Translations> = {
         successMessage: 'Te responderé pronto',
         orReachOut: 'O contáctame directamente',
 
+        navDesigning: 'Diseño',
+        navDrawings: 'Dibujos',
+        navContact: 'Contacto',
+        navExplore: 'Explorar',
+        navConnect: 'Conectar',
+        navArtPortfolio: 'Portafolio Artístico',
+        backToProjects: 'Volver a Proyectos',
+        interfaceDesign: 'Diseño de Interfaces',
+        drawing: 'Dibujo',
+
         footerCopyright: `© ${new Date().getFullYear()} Katerina Voronina`,
         footerCredit: 'POR ALIA STUDIO',
 
@@ -508,6 +539,16 @@ export const translations: Record<Language, Translations> = {
         successTitle: 'Сообщение Отправлено!',
         successMessage: 'Я свяжусь с вами в ближайшее время',
         orReachOut: 'Или свяжитесь напрямую',
+
+        navDesigning: 'Дизайн',
+        navDrawings: 'Рисунки',
+        navContact: 'Контакт',
+        navExplore: 'Навигация',
+        navConnect: 'Связаться',
+        navArtPortfolio: 'Арт Портфолио',
+        backToProjects: 'Назад к Проектам',
+        interfaceDesign: 'Дизайн Интерфейса',
+        drawing: 'Рисунок',
 
         footerCopyright: '© 2025 Катерина Воронина',
         footerCredit: 'ОТ ALIA STUDIO',

@@ -70,7 +70,6 @@ function AnimatedName({ name }: { name: string }) {
                     key={index}
                     ref={(el) => { if (el) lettersRef.current[index] = el; }}
                     className={char === ' ' ? 'inline-block w-[0.25em]' : 'inline-block'}
-                    style={{ willChange: 'transform' }}
                 >
                     {char === ' ' ? '\u00A0' : char}
                 </span>

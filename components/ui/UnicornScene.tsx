@@ -49,7 +49,6 @@ export function UnicornScene({
 
         (document.head || document.body).appendChild(script);
 
-        // Cleanup: no destruimos el script global ya que puede ser usado por otros componentes
         return () => {
             // El script permanece cargado para otros usos
         };

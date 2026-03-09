@@ -38,16 +38,16 @@ const config: Config = {
             keyframes: {
                 blob: {
                     '0%': {
-                        transform: 'translate(0px, 0px) scale(1)',
+                        transform: 'translate3d(0px, 0px, 0) scale(1)',
                     },
                     '33%': {
-                        transform: 'translate(30px, -50px) scale(1.1)',
+                        transform: 'translate3d(30px, -50px, 0) scale(1.1)',
                     },
                     '66%': {
-                        transform: 'translate(-20px, 20px) scale(0.9)',
+                        transform: 'translate3d(-20px, 20px, 0) scale(0.9)',
                     },
                     '100%': {
-                        transform: 'translate(0px, 0px) scale(1)',
+                        transform: 'translate3d(0px, 0px, 0) scale(1)',
                     },
                 },
             },

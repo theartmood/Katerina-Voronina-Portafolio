@@ -6,6 +6,7 @@ import { ArrowUpRight } from 'lucide-react';
 import { OptimizedImage } from '@/components/ui/OptimizedImage';
 import type { ProjectWithImages } from '@/lib/supabase/queries';
 import { SPRING_TRANSITION, HOVER_TRANSITION } from '@/lib/data/projects';
+import { useLanguage } from '@/lib/i18n/LanguageContext';
 
 interface ProjectCardProps {
     project: ProjectWithImages;
@@ -77,8 +78,9 @@ function DrawingCard({ project, index }: { project: ProjectWithImages; index: nu
 }
 
 function InterfaceCard({ project, index }: { project: ProjectWithImages; index: number }) {
+    const { t } = useLanguage();
     const isEven = index % 2 === 0;
-    
+
     // Get cover image or first image
     const coverImage = project.images.find(img => img.is_cover) || project.images[0];
     
@@ -118,7 +120,7 @@ function InterfaceCard({ project, index }: { project: ProjectWithImages; index: 
             <div className="w-full md:w-[52%] flex flex-col justify-center">
                 <div className="border-l border-white/20 pl-6 md:pl-10 pr-4 md:pr-0">
                     <span className="block font-sans text-xs tracking-[0.2em] text-indigo-200/60 mb-3 uppercase">
-                        Case Study 0{index + 1}
+                        {t.caseStudy} 0{index + 1}
                     </span>
                     <h3 
                         className="font-serif text-3xl md:text-4xl lg:text-5xl text-platinum mb-3" 
@@ -136,7 +138,7 @@ function InterfaceCard({ project, index }: { project: ProjectWithImages; index: 
                         href={`/projects/${project.slug}`}
                         className="inline-flex items-center gap-2 text-white/80 hover:text-white group/link pb-1 border-b border-transparent hover:border-white/50 transition-all"
                     >
-                        <span className="font-sans text-sm tracking-widest uppercase">View Project</span>
+                        <span className="font-sans text-sm tracking-widest uppercase">{t.viewProject}</span>
                         <ArrowUpRight
                             size={16}
                             className="transform group-hover/link:translate-x-1 group-hover/link:-translate-y-1 transition-transform"

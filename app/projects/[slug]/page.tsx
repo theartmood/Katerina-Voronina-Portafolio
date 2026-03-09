@@ -79,7 +79,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         <Container className="pt-40 md:pt-60 pb-20">
             {/* Back Button */}
             <Link
-                href="/designing"
+                href={project.category === 'drawings' ? '/drawings' : '/designing'}
                 className="inline-flex items-center gap-2 text-white/60 hover:text-white transition-colors mb-12 group"
             >
                 <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />

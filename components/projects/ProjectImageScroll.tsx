@@ -29,7 +29,7 @@ export function ProjectImageScroll({ images, projectTitle }: ProjectImageScrollP
                     viewport={{ once: true, margin: '-100px' }}
                     transition={{
                         duration: 0.8,
-                        delay: index * 0.1,
+                        delay: Math.min(index * 0.1, 0.3),
                         ease: [0.33, 1, 0.68, 1],
                     }}
                     className="relative overflow-hidden rounded-sm"

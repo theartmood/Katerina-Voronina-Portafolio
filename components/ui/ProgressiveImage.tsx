@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getOptimizedImageUrl, generateSizes } from '@/lib/utils/image-optimization';
 
@@ -46,6 +46,7 @@ export function ProgressiveImage({
 }: ProgressiveImageProps) {
     const [isLoaded, setIsLoaded] = useState(false);
     const [isInView, setIsInView] = useState(priority);
+    const containerRef = useRef<HTMLDivElement>(null);
 
     // Generar sizes automáticamente si no se proporciona
     const imageSizes = sizes || generateSizes(imageType);
@@ -53,6 +54,9 @@ export function ProgressiveImage({
     // Intersection Observer para lazy loading
     useEffect(() => {
         if (priority) return;
+
+        const element = containerRef.current;
+        if (!element) return;
 
         const observer = new IntersectionObserver(
             (entries) => {
@@ -64,17 +68,14 @@ export function ProgressiveImage({
                 });
             },
             {
-                rootMargin: '50px', // Cargar 50px antes de que sea visible
+                rootMargin: '200px',
             }
         );
 
-        const element = document.getElementById(`img-${src}`);
-        if (element) {
-            observer.observe(element);
-        }
+        observer.observe(element);
 
         return () => observer.disconnect();
-    }, [priority, src]);
+    }, [priority]);
 
     const handleLoad = () => {
         setIsLoaded(true);
@@ -83,7 +84,7 @@ export function ProgressiveImage({
 
     return (
         <div
-            id={`img-${src}`}
+            ref={containerRef}
             className={`relative overflow-hidden bg-neutral-900/20 ${className}`}
             style={{ aspectRatio: `${width} / ${height}` }}
         >
@@ -126,9 +127,8 @@ export function ProgressiveImage({
                         sizes={imageSizes}
                         className="object-cover"
                         onLoad={handleLoad}
-                        onError={(e) => {
-                            console.warn('Error loading image:', src);
-                            // El error se maneja visualmente con el placeholder
+                        onError={() => {
+                            // Error handled visually with placeholder
                         }}
                     />
                 </motion.div>

@@ -53,11 +53,10 @@ function AnimatedDescription({ text }: { text: string }) {
 
         const words = wordsRef.current.filter(Boolean);
 
-        // Initial state - all words hidden
+        // Initial state - all words hidden (avoid filter:blur for Safari perf)
         gsap.set(words, {
             opacity: 0,
             y: 20,
-            filter: 'blur(4px)'
         });
 
         // Animate words one by one with stagger
@@ -66,7 +65,6 @@ function AnimatedDescription({ text }: { text: string }) {
         tl.to(words, {
             opacity: 1,
             y: 0,
-            filter: 'blur(0px)',
             duration: 0.8,
             stagger: 0.04,
             ease: 'power3.out'
@@ -89,7 +87,7 @@ function AnimatedDescription({ text }: { text: string }) {
                     key={index}
                     ref={(el) => { if (el) wordsRef.current[index] = el; }}
                     className="inline-block mr-[0.3em]"
-                    style={{ willChange: 'transform, opacity, filter' }}
+
                 >
                     {word}
                 </span>
@@ -157,7 +155,7 @@ function InteractiveWord({ children, className = '' }: { children: string; class
                     key={index}
                     ref={(el) => { if (el) lettersRef.current[index] = el; }}
                     className={letter === ' ' ? 'inline-block w-[0.3em]' : 'inline-block'}
-                    style={{ willChange: 'transform' }}
+
                 >
                     {letter === ' ' ? '\u00A0' : letter}
                 </span>
@@ -207,7 +205,6 @@ function MagneticWord({ children, className = '' }: { children: string; classNam
             className={`inline-block cursor-default ${className}`}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
-            style={{ willChange: 'transform' }}
         >
             {children}
         </span>

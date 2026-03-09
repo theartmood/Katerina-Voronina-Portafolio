@@ -2,13 +2,15 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Sparkles } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import { Container } from '@/components/ui/Container';
 import { PremiumInput } from '@/components/ui/PremiumInput';
 import { PremiumButton } from '@/components/ui/PremiumButton';
 import { SPRING_TRANSITION } from '@/lib/data/projects';
+import { useLanguage } from '@/lib/i18n/LanguageContext';
 
 export default function ContactPage() {
+    const { t } = useLanguage();
     const [formState, setFormState] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
     const [formData, setFormData] = useState({
         name: '',
@@ -24,80 +26,26 @@ export default function ContactPage() {
         setErrorMessage('');
 
         try {
-            // URL hardcodeada de SheetDB
-            const sheetDbUrl = 'https://sheetdb.io/api/v1/ezqlumxug5dnn';
-            
-            // SheetDB requiere que los nombres de las propiedades coincidan EXACTAMENTE con los nombres de las columnas en Google Sheets
-            // IMPORTANTE: Los nombres deben coincidir exactamente: "Name", "Email", "Subject", "Message" (con mayúsculas)
-            const payload = {
-                Name: formData.name,
-                Email: formData.email,
-                Subject: formData.subject,
-                Message: formData.message
-            };
-
-            console.log('📤 Enviando a SheetDB:', {
-                url: sheetDbUrl,
-                payload: payload,
-                '⚠️ IMPORTANTE': 'Verifica que los nombres de las columnas en Google Sheets sean exactamente: Name, Email, Subject, Message'
-            });
-
-            const response = await fetch(sheetDbUrl, {
+            const response = await fetch('/api/contact', {
                 method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(payload)
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData),
             });
 
-            // Intentar leer la respuesta como texto primero para mejor debugging
-            const responseText = await response.text();
-            let responseData;
-            
-            try {
-                responseData = JSON.parse(responseText);
-            } catch (e) {
-                responseData = { 
-                    raw: responseText, 
-                    parseError: e instanceof Error ? e.message : String(e) 
-                };
-            }
-            
-            console.log('📥 Respuesta de SheetDB:', {
-                status: response.status,
-                statusText: response.statusText,
-                ok: response.ok,
-                data: responseData
-            });
-            
             if (!response.ok) {
-                console.error('❌ SheetDB error response:', {
-                    status: response.status,
-                    statusText: response.statusText,
-                    data: responseData,
-                    payload: payload,
-                    '💡 SOLUCIÓN': 'Verifica que los nombres de las columnas en Google Sheets coincidan exactamente con: Name, Email, Subject, Message (con mayúsculas)'
-                });
-                throw new Error(`SheetDB request failed: ${response.status} ${response.statusText}. Response: ${JSON.stringify(responseData)}`);
+                throw new Error('Request failed');
             }
 
-            console.log('✅ SheetDB success:', responseData);
-
-            // Éxito con SheetDB
             setFormState('success');
-            
-            // Reset form after success
+
             setTimeout(() => {
                 setFormState('idle');
                 setFormData({ name: '', email: '', subject: '', message: '' });
             }, 3000);
-        } catch (error) {
-            console.error('Error sending message:', error);
+        } catch {
             setFormState('error');
             setErrorMessage('Failed to send message. Please try again or contact directly via email: ekater.voronina@gmail.com');
-            
-            // Reset error state after 5 seconds
+
             setTimeout(() => {
                 setFormState('idle');
             }, 5000);
@@ -123,15 +71,15 @@ export default function ContactPage() {
                         >
                             <Sparkles size={16} className="text-amethyst-dark" />
                             <span className="font-sans text-xs tracking-[0.3em] uppercase text-amethyst-dark">
-                                Let&apos;s Connect
+                                {t.contactBadge}
                             </span>
                         </motion.div>
 
                         <h1 className="font-serif text-5xl md:text-7xl text-platinum italic mb-6">
-                            Start a Conversation
+                            {t.contactTitle}
                         </h1>
                         <p className="font-sans text-lg text-white/50 max-w-2xl mx-auto leading-relaxed">
-                            Have a project in mind? Let&apos;s discuss how we can create something extraordinary together.
+                            {t.contactDescription}
                         </p>
                     </motion.div>
 
@@ -151,14 +99,14 @@ export default function ContactPage() {
                                 {/* Name & Email Row */}
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                     <PremiumInput
-                                        label="Name"
+                                        label={t.nameLabel}
                                         type="text"
                                         required
                                         value={formData.name}
                                         onChange={(value) => setFormData({ ...formData, name: value })}
                                     />
                                     <PremiumInput
-                                        label="Email"
+                                        label={t.emailLabel}
                                         type="email"
                                         required
                                         value={formData.email}
@@ -168,7 +116,7 @@ export default function ContactPage() {
 
                                 {/* Subject */}
                                 <PremiumInput
-                                    label="Subject"
+                                    label={t.subjectLabel}
                                     type="text"
                                     required
                                     value={formData.subject}
@@ -177,7 +125,7 @@ export default function ContactPage() {
 
                                 {/* Message */}
                                 <PremiumInput
-                                    label="Message"
+                                    label={t.messageLabel}
                                     type="textarea"
                                     required
                                     value={formData.message}
@@ -211,10 +159,10 @@ export default function ContactPage() {
                                                 >
                                                     <Sparkles size={16} />
                                                 </motion.div>
-                                                Sending...
+                                                {t.sending}
                                             </>
                                         ) : (
-                                            'Send Message'
+                                            t.sendButton
                                         )}
                                     </PremiumButton>
                                 </motion.div>
@@ -233,7 +181,7 @@ export default function ContactPage() {
                         transition={{ delay: 0.8 }}
                         className="mt-20 text-center"
                     >
-                        <p className="font-sans text-sm text-white/40 mb-4">Or reach out directly</p>
+                        <p className="font-sans text-sm text-white/40 mb-4">{t.orReachOut}</p>
                         <a
                             href="mailto:ekater.voronina@gmail.com"
                             className="font-serif text-xl text-platinum hover:text-white transition-colors"
@@ -294,10 +242,10 @@ export default function ContactPage() {
                             </motion.div>
 
                             <h2 className="font-serif text-5xl md:text-6xl text-platinum italic mb-4">
-                                Message Sent!
+                                {t.successTitle}
                             </h2>
                             <p className="font-sans text-white/50 tracking-[0.2em] uppercase text-sm">
-                                I&apos;ll get back to you shortly
+                                {t.successMessage}
                             </p>
 
                             {/* Sparkles */}

@@ -3,22 +3,32 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Instagram, Mail, Linkedin } from 'lucide-react';
-// X icon imported but not currently used (commented out per user request)
-// import { X } from 'lucide-react';
 import Link from 'next/link';
+import { useLanguage } from '@/lib/i18n/LanguageContext';
 
 export function MobileMenu() {
     const [isOpen, setIsOpen] = useState(false);
     const [mounted, setMounted] = useState(false);
+    const { t } = useLanguage();
 
     // Prevent hydration mismatch
     useEffect(() => {
         setMounted(true);
     }, []);
 
+    // Lock body scroll when menu is open
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        return () => { document.body.style.overflow = ''; };
+    }, [isOpen]);
+
     const menuItems = [
-        { label: 'Designing', href: '/designing' },
-        { label: 'Drawings', href: '/drawings' },
+        { label: t.navDesigning, href: '/designing' },
+        { label: t.navDrawings, href: '/drawings' },
     ];
 
     const socialLinks = [
@@ -98,7 +108,7 @@ export function MobileMenu() {
                                         transition={{ delay: 0.1, duration: 0.5, ease: [0.33, 1, 0.68, 1] }}
                                         className="text-xs uppercase tracking-[0.3em] text-white/30 mb-6 font-sans"
                                     >
-                                        Explore
+                                        {t.navExplore}
                                     </motion.p>
                                     <div className="space-y-2">
                                         {menuItems.map((item, index) => (
@@ -133,7 +143,7 @@ export function MobileMenu() {
                                     className="mb-12"
                                 >
                                     <p className="text-xs uppercase tracking-[0.3em] text-white/30 mb-6 font-sans">
-                                        Connect
+                                        {t.navConnect}
                                     </p>
                                     <div className="flex gap-4">
                                         {socialLinks.map((social, index) => (
@@ -175,7 +185,7 @@ export function MobileMenu() {
                                     >
                                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                                         <span className="relative z-10 font-sans text-sm tracking-[0.2em] uppercase text-white font-medium">
-                                            Contact
+                                            {t.navContact}
                                         </span>
                                         <motion.div
                                             animate={{ x: [0, 4, 0] }}

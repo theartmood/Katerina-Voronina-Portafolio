@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
@@ -20,15 +20,24 @@ interface ImageLightboxProps {
 
 export function ImageLightbox({ images, initialIndex = 0, isOpen, onClose }: ImageLightboxProps) {
     const [currentIndex, setCurrentIndex] = useState(initialIndex);
+    const overlayRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         setCurrentIndex(initialIndex);
     }, [initialIndex]);
 
+    const goToNext = useCallback(() => {
+        setCurrentIndex((prev) => (prev + 1) % images.length);
+    }, [images.length]);
+
+    const goToPrevious = useCallback(() => {
+        setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
+    }, [images.length]);
+
     useEffect(() => {
+        if (!isOpen) return;
+
         const handleKeyDown = (e: KeyboardEvent) => {
-            if (!isOpen) return;
-            
             if (e.key === 'Escape') {
                 onClose();
             } else if (e.key === 'ArrowLeft') {
@@ -38,17 +47,18 @@ export function ImageLightbox({ images, initialIndex = 0, isOpen, onClose }: Ima
             }
         };
 
+        // Lock body scroll
+        document.body.style.overflow = 'hidden';
         window.addEventListener('keydown', handleKeyDown);
-        return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [isOpen, currentIndex]);
 
-    const goToNext = () => {
-        setCurrentIndex((prev) => (prev + 1) % images.length);
-    };
+        // Focus trap: focus the overlay so keyboard events work
+        overlayRef.current?.focus();
 
-    const goToPrevious = () => {
-        setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
-    };
+        return () => {
+            document.body.style.overflow = '';
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [isOpen, onClose, goToNext, goToPrevious]);
 
     const currentImage = images[currentIndex];
 
@@ -56,10 +66,15 @@ export function ImageLightbox({ images, initialIndex = 0, isOpen, onClose }: Ima
         <AnimatePresence>
             {isOpen && (
                 <motion.div
+                    ref={overlayRef}
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label={`Image ${currentIndex + 1} of ${images.length}`}
+                    tabIndex={-1}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/95"
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 outline-none"
                     onClick={onClose}
                 >
                     {/* Close Button */}

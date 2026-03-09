@@ -1,15 +1,8 @@
 import type { Metadata } from 'next';
-import { Bricolage_Grotesque } from 'next/font/google';
 import './globals.css';
 import { AuroraBackground } from '@/components/layout/AuroraBackground';
 import { UnicornBackground } from '@/components/layout/UnicornBackground';
 import { ClientLayout } from '@/components/layout/ClientLayout';
-
-const bricolageGrotesque = Bricolage_Grotesque({
-    subsets: ['latin'],
-    variable: '--font-bricolage',
-    display: 'swap',
-});
 
 export const metadata: Metadata = {
     title: {
@@ -89,7 +82,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en" className={`${bricolageGrotesque.variable}`}>
+        <html lang="en" className="font-sans">
             <body className="relative min-h-screen text-platinum selection:bg-amethyst-dark selection:text-white">
                 <AuroraBackground />
                 <UnicornBackground />

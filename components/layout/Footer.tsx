@@ -43,7 +43,7 @@ export function Footer() {
                 {/* Art Portfolio Link */}
                 <div className="text-[10px] md:text-xs text-white/30 uppercase tracking-wider font-sans">
                     <FooterLink href="/drawings">
-                        Art Portfolio
+                        {t.navArtPortfolio}
                     </FooterLink>
                 </div>
 
